@@ -1,0 +1,1354 @@
+[
+  {
+    "id": "0",
+    "text": "Gina used to compete in dance competitions and shows, winning first place in a regional competition at the age of fifteen.",
+    "speaker": "Gina",
+    "evidence_ref": "D1:17",
+    "session_num": 1,
+    "timestamp": "4:04 pm on 20 January, 2023"
+  },
+  {
+    "id": "1",
+    "text": "Jon lost his job as a banker the day before the conversation.",
+    "speaker": "Jon",
+    "evidence_ref": "D1:2",
+    "session_num": 1,
+    "timestamp": "4:04 pm on 20 January, 2023"
+  },
+  {
+    "id": "2",
+    "text": "Jon practices various dances with a small group, including contemporary and hip-hop, and is working on choreography for a nearby festival.",
+    "speaker": "Jon",
+    "evidence_ref": "D1:24",
+    "session_num": 1,
+    "timestamp": "4:04 pm on 20 January, 2023"
+  },
+  {
+    "id": "3",
+    "text": "Gina lost her job at Door Dash during the month of the conversation.",
+    "speaker": "Gina",
+    "evidence_ref": "D1:3",
+    "session_num": 1,
+    "timestamp": "4:04 pm on 20 January, 2023"
+  },
+  {
+    "id": "4",
+    "text": "Jon is starting his own dance studio due to his passion for dancing.",
+    "speaker": "Jon",
+    "evidence_ref": "D1:4",
+    "session_num": 1,
+    "timestamp": "4:04 pm on 20 January, 2023"
+  },
+  {
+    "id": "5",
+    "text": "Jon's favorite dance style is contemporary.",
+    "speaker": "Jon",
+    "evidence_ref": "D1:8",
+    "session_num": 1,
+    "timestamp": "4:04 pm on 20 January, 2023"
+  },
+  {
+    "id": "6",
+    "text": "Gina's favorite dance style is contemporary.",
+    "speaker": "Gina",
+    "evidence_ref": "D1:9",
+    "session_num": 1,
+    "timestamp": "4:04 pm on 20 January, 2023"
+  },
+  {
+    "id": "7",
+    "text": "Gina launched an ad campaign for her clothing store in hopes of growing the business.",
+    "speaker": "Gina",
+    "evidence_ref": "D2:1",
+    "session_num": 2,
+    "timestamp": "2:32 pm on 29 January, 2023"
+  },
+  {
+    "id": "8",
+    "text": "Gina started her own clothing store and finds taking risks scary but rewarding.",
+    "speaker": "Gina",
+    "evidence_ref": "D2:1",
+    "session_num": 2,
+    "timestamp": "2:32 pm on 29 January, 2023"
+  },
+  {
+    "id": "9",
+    "text": "Jon finds the process of setting up his dance studio a mix of exciting and nerve-wracking but is determined to make it work.",
+    "speaker": "Jon",
+    "evidence_ref": "D2:10",
+    "session_num": 2,
+    "timestamp": "2:32 pm on 29 January, 2023"
+  },
+  {
+    "id": "10",
+    "text": "Gina appreciates Jon's determination to make his dance studio work.",
+    "speaker": "Gina",
+    "evidence_ref": "D2:11",
+    "session_num": 2,
+    "timestamp": "2:32 pm on 29 January, 2023"
+  },
+  {
+    "id": "11",
+    "text": "Jon believes in himself and is grateful for Gina's support.",
+    "speaker": "Jon",
+    "evidence_ref": "D2:12",
+    "session_num": 2,
+    "timestamp": "2:32 pm on 29 January, 2023"
+  },
+  {
+    "id": "12",
+    "text": "Gina appreciates seeing her vision for the store come to life.",
+    "speaker": "Gina",
+    "evidence_ref": "D2:3",
+    "session_num": 2,
+    "timestamp": "2:32 pm on 29 January, 2023"
+  },
+  {
+    "id": "13",
+    "text": "Jon is looking for the ideal spot for his dance studio and is considering features like size, natural light, and flooring.",
+    "speaker": "Jon",
+    "evidence_ref": "D2:4",
+    "session_num": 2,
+    "timestamp": "2:32 pm on 29 January, 2023"
+  },
+  {
+    "id": "14",
+    "text": "Jon visited Paris recently",
+    "speaker": "Jon",
+    "evidence_ref": "D2:4",
+    "session_num": 2,
+    "timestamp": "2:32 pm on 29 January, 2023"
+  },
+  {
+    "id": "15",
+    "text": "Gina has been to Rome once.",
+    "speaker": "Gina",
+    "evidence_ref": "D2:5",
+    "session_num": 2,
+    "timestamp": "2:32 pm on 29 January, 2023"
+  },
+  {
+    "id": "16",
+    "text": "Gina believes that good flooring helps avoid injuries and makes dancing more enjoyable.",
+    "speaker": "Gina",
+    "evidence_ref": "D2:7",
+    "session_num": 2,
+    "timestamp": "2:32 pm on 29 January, 2023"
+  },
+  {
+    "id": "17",
+    "text": "Jon is looking for Marley flooring for his dance studio due to its grip, movement, durability, and cleanliness.",
+    "speaker": "Jon",
+    "evidence_ref": "D2:8",
+    "session_num": 2,
+    "timestamp": "2:32 pm on 29 January, 2023"
+  },
+  {
+    "id": "18",
+    "text": "Jon is following his passion for dance and searching for a place to open his dance studio.",
+    "speaker": "Jon",
+    "evidence_ref": "D3:1",
+    "session_num": 3,
+    "timestamp": "12:48 am on 1 February, 2023"
+  },
+  {
+    "id": "19",
+    "text": "Gina is enthusiastic about expanding her clothing store and successfully got a positive response from a wholesaler.",
+    "speaker": "Gina",
+    "evidence_ref": "D3:2",
+    "session_num": 3,
+    "timestamp": "12:48 am on 1 February, 2023"
+  },
+  {
+    "id": "20",
+    "text": "Gina designed her clothing store space to be cozy and inviting for her customers.",
+    "speaker": "Gina",
+    "evidence_ref": "D3:4",
+    "session_num": 3,
+    "timestamp": "12:48 am on 1 February, 2023"
+  },
+  {
+    "id": "21",
+    "text": "Gina chose furniture and decor for her store that match her style and make customers feel comfortable.",
+    "speaker": "Gina",
+    "evidence_ref": "D3:6",
+    "session_num": 3,
+    "timestamp": "12:48 am on 1 February, 2023"
+  },
+  {
+    "id": "22",
+    "text": "Gina's goal is to create a comfortable and inviting shopping experience for her customers.",
+    "speaker": "Gina",
+    "evidence_ref": "D3:8",
+    "session_num": 3,
+    "timestamp": "12:48 am on 1 February, 2023"
+  },
+  {
+    "id": "23",
+    "text": "Gina encourages Jon to hang in there while searching for the perfect dance studio location.",
+    "speaker": "Gina",
+    "evidence_ref": "D4:10",
+    "session_num": 4,
+    "timestamp": "10:43 am on 4 February, 2023"
+  },
+  {
+    "id": "24",
+    "text": "Jon is working on new dance routines and rehearsing hard for an upcoming show.",
+    "speaker": "Jon",
+    "evidence_ref": "D4:11",
+    "session_num": 4,
+    "timestamp": "10:43 am on 4 February, 2023"
+  },
+  {
+    "id": "25",
+    "text": "Jon is passionate about dancing and it brings him joy and fulfillment.",
+    "speaker": "Jon",
+    "evidence_ref": "D4:11",
+    "session_num": 4,
+    "timestamp": "10:43 am on 4 February, 2023"
+  },
+  {
+    "id": "26",
+    "text": "Jon is preparing for a dance competition near him next month to showcase his skills.",
+    "speaker": "Jon",
+    "evidence_ref": "D4:13",
+    "session_num": 4,
+    "timestamp": "10:43 am on 4 February, 2023"
+  },
+  {
+    "id": "27",
+    "text": "Gina compliments Jon's talent and expresses confidence in his success in the upcoming dance competition.",
+    "speaker": "Gina",
+    "evidence_ref": "D4:14",
+    "session_num": 4,
+    "timestamp": "10:43 am on 4 February, 2023"
+  },
+  {
+    "id": "28",
+    "text": "Gina's store is doing great and it's a wild ride.",
+    "speaker": "Gina",
+    "evidence_ref": "D4:2",
+    "session_num": 4,
+    "timestamp": "10:43 am on 4 February, 2023"
+  },
+  {
+    "id": "29",
+    "text": "Jon is working hard on his business despite facing obstacles.",
+    "speaker": "Jon",
+    "evidence_ref": "D4:3",
+    "session_num": 4,
+    "timestamp": "10:43 am on 4 February, 2023"
+  },
+  {
+    "id": "30",
+    "text": "Gina encourages Jon to keep pushing, assuring him he'll reach his dreams.",
+    "speaker": "Gina",
+    "evidence_ref": "D4:4",
+    "session_num": 4,
+    "timestamp": "10:43 am on 4 February, 2023"
+  },
+  {
+    "id": "31",
+    "text": "Jon is determined to make his business successful and reach his dreams.",
+    "speaker": "Jon",
+    "evidence_ref": "D4:5",
+    "session_num": 4,
+    "timestamp": "10:43 am on 4 February, 2023"
+  },
+  {
+    "id": "32",
+    "text": "Gina supports Jon through setbacks and encourages him not to give up.",
+    "speaker": "Gina",
+    "evidence_ref": "D4:6",
+    "session_num": 4,
+    "timestamp": "10:43 am on 4 February, 2023"
+  },
+  {
+    "id": "33",
+    "text": "Gina is supportive of Jon and assures him that setbacks can be overcome.",
+    "speaker": "Gina",
+    "evidence_ref": "D4:6",
+    "session_num": 4,
+    "timestamp": "10:43 am on 4 February, 2023"
+  },
+  {
+    "id": "34",
+    "text": "Gina expresses full support for Jon and encourages him not to give up.",
+    "speaker": "Gina",
+    "evidence_ref": "D4:6",
+    "session_num": 4,
+    "timestamp": "10:43 am on 4 February, 2023"
+  },
+  {
+    "id": "35",
+    "text": "Jon is searching for a dance studio location and is determined to find the right spot.",
+    "speaker": "Jon",
+    "evidence_ref": "D4:9",
+    "session_num": 4,
+    "timestamp": "10:43 am on 4 February, 2023"
+  },
+  {
+    "id": "36",
+    "text": "Gina owns a store where she sells fashion pieces.",
+    "speaker": "Gina",
+    "evidence_ref": "D5:1",
+    "session_num": 5,
+    "timestamp": "9:32 am on 8 February, 2023"
+  },
+  {
+    "id": "37",
+    "text": "Jon left his secure 9-5 job as a banker to pursue his passion for dancing and turn it into a business.",
+    "speaker": "Jon",
+    "evidence_ref": "D5:10",
+    "session_num": 5,
+    "timestamp": "9:32 am on 8 February, 2023"
+  },
+  {
+    "id": "38",
+    "text": "Gina got a tattoo a few years ago that stands for freedom and a reminder to follow her passions and express herself.",
+    "speaker": "Gina",
+    "evidence_ref": "D5:15",
+    "session_num": 5,
+    "timestamp": "9:32 am on 8 February, 2023"
+  },
+  {
+    "id": "39",
+    "text": "Jon finds joy and passion in dancing.",
+    "speaker": "Jon",
+    "evidence_ref": "D5:2",
+    "session_num": 5,
+    "timestamp": "9:32 am on 8 February, 2023"
+  },
+  {
+    "id": "40",
+    "text": "Jon juggles between running his dance studio and pursuing business goals, finding it rewarding and energizing.",
+    "speaker": "Jon",
+    "evidence_ref": "D5:20",
+    "session_num": 5,
+    "timestamp": "9:32 am on 8 February, 2023"
+  },
+  {
+    "id": "41",
+    "text": "Jon is a dancer who runs his own dance studio.",
+    "speaker": "Jon",
+    "evidence_ref": "D5:4",
+    "session_num": 5,
+    "timestamp": "9:32 am on 8 February, 2023"
+  },
+  {
+    "id": "42",
+    "text": "Gina has an online store and recently teamed up with a local artist for some cool designs.",
+    "speaker": "Gina",
+    "evidence_ref": "D5:5",
+    "session_num": 5,
+    "timestamp": "9:32 am on 8 February, 2023"
+  },
+  {
+    "id": "43",
+    "text": "Jon believes taking risks is essential for success and transformation.",
+    "speaker": "Jon",
+    "evidence_ref": "D5:8",
+    "session_num": 5,
+    "timestamp": "9:32 am on 8 February, 2023"
+  },
+  {
+    "id": "44",
+    "text": "Jon started hitting the gym last week to stay on track with a venture.",
+    "speaker": "Jon",
+    "evidence_ref": "D6:1",
+    "session_num": 6,
+    "timestamp": "2:35 pm on 16 March, 2023"
+  },
+  {
+    "id": "45",
+    "text": "Jon is starting his own business after losing his job and finds it tough but fulfilling.",
+    "speaker": "Jon",
+    "evidence_ref": "D6:11",
+    "session_num": 6,
+    "timestamp": "2:35 pm on 16 March, 2023"
+  },
+  {
+    "id": "46",
+    "text": "Gina finds starting and running her own business to be a rollercoaster ride with its ups and downs.",
+    "speaker": "Gina",
+    "evidence_ref": "D6:12",
+    "session_num": 6,
+    "timestamp": "2:35 pm on 16 March, 2023"
+  },
+  {
+    "id": "47",
+    "text": "Jon finds Gina's success inspiring and her determination awesome.",
+    "speaker": "Jon",
+    "evidence_ref": "D6:13",
+    "session_num": 6,
+    "timestamp": "2:35 pm on 16 March, 2023"
+  },
+  {
+    "id": "48",
+    "text": "Gina feels inspired by Jon's determination and success, and his words of encouragement mean a lot to her.",
+    "speaker": "Gina",
+    "evidence_ref": "D6:14",
+    "session_num": 6,
+    "timestamp": "2:35 pm on 16 March, 2023"
+  },
+  {
+    "id": "49",
+    "text": "Jon feels motivated by facing similar challenges to Gina and considers her like a partner in this journey.",
+    "speaker": "Jon",
+    "evidence_ref": "D6:15",
+    "session_num": 6,
+    "timestamp": "2:35 pm on 16 March, 2023"
+  },
+  {
+    "id": "50",
+    "text": "Gina sees Jon as someone on a different path but appreciates having him as someone to root for and support each other.",
+    "speaker": "Gina",
+    "evidence_ref": "D6:16",
+    "session_num": 6,
+    "timestamp": "2:35 pm on 16 March, 2023"
+  },
+  {
+    "id": "51",
+    "text": "Gina values having someone like Jon to back her up and encourages each other to chase their dreams and achieve great things together.",
+    "speaker": "Gina",
+    "evidence_ref": "D6:18",
+    "session_num": 6,
+    "timestamp": "2:35 pm on 16 March, 2023"
+  },
+  {
+    "id": "52",
+    "text": "Jon is encouraged by Gina's journey and finds it inspiring.",
+    "speaker": "Jon",
+    "evidence_ref": "D6:19",
+    "session_num": 6,
+    "timestamp": "2:35 pm on 16 March, 2023"
+  },
+  {
+    "id": "53",
+    "text": "Jon lost his job at Door Dash.",
+    "speaker": "Jon",
+    "evidence_ref": "D6:4",
+    "session_num": 6,
+    "timestamp": "2:35 pm on 16 March, 2023"
+  },
+  {
+    "id": "54",
+    "text": "Gina lost her job at Door Dash.",
+    "speaker": "Gina",
+    "evidence_ref": "D6:4",
+    "session_num": 6,
+    "timestamp": "2:35 pm on 16 March, 2023"
+  },
+  {
+    "id": "55",
+    "text": "Gina opened an online clothes store which she had been dreaming of for a while.",
+    "speaker": "Gina",
+    "evidence_ref": "D6:6",
+    "session_num": 6,
+    "timestamp": "2:35 pm on 16 March, 2023"
+  },
+  {
+    "id": "56",
+    "text": "Gina is passionate about fashion trends and unique pieces, and she blended her love for dance and fashion in starting the online store.",
+    "speaker": "Gina",
+    "evidence_ref": "D6:8",
+    "session_num": 6,
+    "timestamp": "2:35 pm on 16 March, 2023"
+  },
+  {
+    "id": "57",
+    "text": "Gina runs an online clothing store and has been keeping up with fashion trends to offer the best pieces to customers.",
+    "speaker": "Gina",
+    "evidence_ref": "D7:4",
+    "session_num": 7,
+    "timestamp": "7:28 pm on 23 March, 2023"
+  },
+  {
+    "id": "58",
+    "text": "Gina values building relationships and creating a strong brand image for her store.",
+    "speaker": "Gina",
+    "evidence_ref": "D7:6",
+    "session_num": 7,
+    "timestamp": "7:28 pm on 23 March, 2023"
+  },
+  {
+    "id": "59",
+    "text": "Jon has a dance studio business where he helps his students learn and reach their goals.",
+    "speaker": "Jon",
+    "evidence_ref": "D7:7",
+    "session_num": 7,
+    "timestamp": "7:28 pm on 23 March, 2023"
+  },
+  {
+    "id": "60",
+    "text": "Jon had to shut down his bank account for his business.",
+    "speaker": "Jon",
+    "evidence_ref": "D8:1",
+    "session_num": 8,
+    "timestamp": "1:26 pm on 3 April, 2023"
+  },
+  {
+    "id": "61",
+    "text": "Gina is focused on building her customer base for her store by working with fashion bloggers, influencers, and running more ads.",
+    "speaker": "Gina",
+    "evidence_ref": "D8:12",
+    "session_num": 8,
+    "timestamp": "1:26 pm on 3 April, 2023"
+  },
+  {
+    "id": "62",
+    "text": "Gina plans to work with fashion bloggers and influencers to get more attention for her store and do more ads to reach more people.",
+    "speaker": "Gina",
+    "evidence_ref": "D8:12",
+    "session_num": 8,
+    "timestamp": "1:26 pm on 3 April, 2023"
+  },
+  {
+    "id": "63",
+    "text": "Jon is expanding his dance studio's social media presence and offering workshops and classes to local schools and centers.",
+    "speaker": "Jon",
+    "evidence_ref": "D8:13",
+    "session_num": 8,
+    "timestamp": "1:26 pm on 3 April, 2023"
+  },
+  {
+    "id": "64",
+    "text": "Jon is hosting a dance competition next month to showcase local talent and bring more attention to his studio.",
+    "speaker": "Jon",
+    "evidence_ref": "D8:13",
+    "session_num": 8,
+    "timestamp": "1:26 pm on 3 April, 2023"
+  },
+  {
+    "id": "65",
+    "text": "Jon is handling changes positively and looking ahead despite facing challenges.",
+    "speaker": "Jon",
+    "evidence_ref": "D8:3",
+    "session_num": 8,
+    "timestamp": "1:26 pm on 3 April, 2023"
+  },
+  {
+    "id": "66",
+    "text": "Gina got new offers and promotions for her online store to attract new customers.",
+    "speaker": "Gina",
+    "evidence_ref": "D8:4",
+    "session_num": 8,
+    "timestamp": "1:26 pm on 3 April, 2023"
+  },
+  {
+    "id": "67",
+    "text": "Dance is Gina's stress relief and fashion fuels her creativity.",
+    "speaker": "Gina",
+    "evidence_ref": "D8:6",
+    "session_num": 8,
+    "timestamp": "1:26 pm on 3 April, 2023"
+  },
+  {
+    "id": "68",
+    "text": "Gina combines her passion for dance and fashion to show creativity and share love with others.",
+    "speaker": "Gina",
+    "evidence_ref": "D8:8",
+    "session_num": 8,
+    "timestamp": "1:26 pm on 3 April, 2023"
+  },
+  {
+    "id": "69",
+    "text": "Jon is turning his passion for dance into a business by opening a dance studio.",
+    "speaker": "Jon",
+    "evidence_ref": "D9:1",
+    "session_num": 9,
+    "timestamp": "10:33 am on 9 April, 2023"
+  },
+  {
+    "id": "70",
+    "text": "Gina has a trophy from a dance contest as a reminder of the hard work, dedication, and joy dance brings.",
+    "speaker": "Gina",
+    "evidence_ref": "D9:10",
+    "session_num": 9,
+    "timestamp": "10:33 am on 9 April, 2023"
+  },
+  {
+    "id": "71",
+    "text": "Gina encourages Jon to keep up his hard work and achievements.",
+    "speaker": "Gina",
+    "evidence_ref": "D9:12",
+    "session_num": 9,
+    "timestamp": "10:33 am on 9 April, 2023"
+  },
+  {
+    "id": "72",
+    "text": "Jon is determined to keep pushing and working hard for his dance business.",
+    "speaker": "Jon",
+    "evidence_ref": "D9:13",
+    "session_num": 9,
+    "timestamp": "10:33 am on 9 April, 2023"
+  },
+  {
+    "id": "73",
+    "text": "Gina admires Jon for turning his passion for dance into a business.",
+    "speaker": "Gina",
+    "evidence_ref": "D9:2",
+    "session_num": 9,
+    "timestamp": "10:33 am on 9 April, 2023"
+  },
+  {
+    "id": "74",
+    "text": "Jon's determination to make the dance studio work was fueled by losing his job.",
+    "speaker": "Jon",
+    "evidence_ref": "D9:3",
+    "session_num": 9,
+    "timestamp": "10:33 am on 9 April, 2023"
+  },
+  {
+    "id": "75",
+    "text": "Gina acknowledges that tough times can lead to great things and supports Jon in going after his dreams.",
+    "speaker": "Gina",
+    "evidence_ref": "D9:4",
+    "session_num": 9,
+    "timestamp": "10:33 am on 9 April, 2023"
+  },
+  {
+    "id": "76",
+    "text": "Jonathan finds happiness in dancing and expresses himself through it.",
+    "speaker": "Jon",
+    "evidence_ref": "D9:5",
+    "session_num": 9,
+    "timestamp": "10:33 am on 9 April, 2023"
+  },
+  {
+    "id": "77",
+    "text": "Jon used to be scared of what people would think, but now prioritizes his own happiness.",
+    "speaker": "Jon",
+    "evidence_ref": "D9:7",
+    "session_num": 9,
+    "timestamp": "10:33 am on 9 April, 2023"
+  },
+  {
+    "id": "78",
+    "text": "Gina loves spending time in the dance studio and values dance as a way to express oneself and find happiness.",
+    "speaker": "Gina",
+    "evidence_ref": "D9:8",
+    "session_num": 9,
+    "timestamp": "10:33 am on 9 April, 2023"
+  },
+  {
+    "id": "79",
+    "text": "Jon loved taking dance lessons with friends when he was younger.",
+    "speaker": "Jon",
+    "evidence_ref": "D9:9",
+    "session_num": 9,
+    "timestamp": "10:33 am on 9 April, 2023"
+  },
+  {
+    "id": "80",
+    "text": "Jon values the special meaning dance has for himself and Gina, as a way to express themselves.",
+    "speaker": "Jon",
+    "evidence_ref": "D9:9",
+    "session_num": 9,
+    "timestamp": "10:33 am on 9 April, 2023"
+  },
+  {
+    "id": "81",
+    "text": "Jon has a studio business that he showed off at a fair recently.",
+    "speaker": "Jon",
+    "evidence_ref": "D10:1",
+    "session_num": 10,
+    "timestamp": "11:24 am on 25 April, 2023"
+  },
+  {
+    "id": "82",
+    "text": "Jon considers having confidence in oneself important for business success.",
+    "speaker": "Jon",
+    "evidence_ref": "D10:1",
+    "session_num": 10,
+    "timestamp": "11:24 am on 25 April, 2023"
+  },
+  {
+    "id": "83",
+    "text": "Jon is talented and passionate about dance, as per Gina's encouragement.",
+    "speaker": "Jon",
+    "evidence_ref": "D10:10",
+    "session_num": 10,
+    "timestamp": "11:24 am on 25 April, 2023"
+  },
+  {
+    "id": "84",
+    "text": "Gina encourages Jon to believe in himself, tackle obstacles, and keep shining in pursuing his dreams.",
+    "speaker": "Gina",
+    "evidence_ref": "D10:10",
+    "session_num": 10,
+    "timestamp": "11:24 am on 25 April, 2023"
+  },
+  {
+    "id": "85",
+    "text": "Gina started her own online clothing store after losing her job to take control of her destiny.",
+    "speaker": "Gina",
+    "evidence_ref": "D10:2",
+    "session_num": 10,
+    "timestamp": "11:24 am on 25 April, 2023"
+  },
+  {
+    "id": "86",
+    "text": "Gina finds setbacks tough but rewarding for growth.",
+    "speaker": "Gina",
+    "evidence_ref": "D10:4",
+    "session_num": 10,
+    "timestamp": "11:24 am on 25 April, 2023"
+  },
+  {
+    "id": "87",
+    "text": "Jon is having trouble with his business project and seeks advice on staying motivated.",
+    "speaker": "Jon",
+    "evidence_ref": "D10:5",
+    "session_num": 10,
+    "timestamp": "11:24 am on 25 April, 2023"
+  },
+  {
+    "id": "88",
+    "text": "Gina advises Jon to focus on the big goal, get support, and dance it out to stay motivated during tough times in business.",
+    "speaker": "Gina",
+    "evidence_ref": "D10:6",
+    "session_num": 10,
+    "timestamp": "11:24 am on 25 April, 2023"
+  },
+  {
+    "id": "89",
+    "text": "Jon is feeling low on confidence lately and seeks advice from Gina on staying confident in business.",
+    "speaker": "Jon",
+    "evidence_ref": "D10:7",
+    "session_num": 10,
+    "timestamp": "11:24 am on 25 April, 2023"
+  },
+  {
+    "id": "90",
+    "text": "Gina gives Jon tips to stay confident in business by reminding of successes and progress, having a good support system, and having faith in oneself.",
+    "speaker": "Gina",
+    "evidence_ref": "D10:8",
+    "session_num": 10,
+    "timestamp": "11:24 am on 25 April, 2023"
+  },
+  {
+    "id": "91",
+    "text": "Jon hopes to create a place for people to dance and express themselves, as it's been a dream of his.",
+    "speaker": "Jon",
+    "evidence_ref": "D11:11",
+    "session_num": 11,
+    "timestamp": "3:14 pm on 11 May, 2023"
+  },
+  {
+    "id": "92",
+    "text": "Gina had an interview for a design internship and found it to be great.",
+    "speaker": "Gina",
+    "evidence_ref": "D11:14",
+    "session_num": 11,
+    "timestamp": "3:14 pm on 11 May, 2023"
+  },
+  {
+    "id": "93",
+    "text": "Gina is proud of Jon and is excited about his dance studio project.",
+    "speaker": "Gina",
+    "evidence_ref": "D11:20",
+    "session_num": 11,
+    "timestamp": "3:14 pm on 11 May, 2023"
+  },
+  {
+    "id": "94",
+    "text": "Jon lost his job but used it as an opportunity to start his dream business: a dance studio.",
+    "speaker": "Jon",
+    "evidence_ref": "D11:3",
+    "session_num": 11,
+    "timestamp": "3:14 pm on 11 May, 2023"
+  },
+  {
+    "id": "95",
+    "text": "Dance has been Jon's stress-buster since childhood.",
+    "speaker": "Jon",
+    "evidence_ref": "D11:5",
+    "session_num": 11,
+    "timestamp": "3:14 pm on 11 May, 2023"
+  },
+  {
+    "id": "96",
+    "text": "Gina finds dancing as her stress fix and something that makes her worries vanish.",
+    "speaker": "Gina",
+    "evidence_ref": "D11:6",
+    "session_num": 11,
+    "timestamp": "3:14 pm on 11 May, 2023"
+  },
+  {
+    "id": "97",
+    "text": "Jon sees dancing as where he feels most alive and considers it a must-have in his life.",
+    "speaker": "Jon",
+    "evidence_ref": "D11:7",
+    "session_num": 11,
+    "timestamp": "3:14 pm on 11 May, 2023"
+  },
+  {
+    "id": "98",
+    "text": "Dance is essential to Gina, and she compares it to being like air.",
+    "speaker": "Gina",
+    "evidence_ref": "D11:8",
+    "session_num": 11,
+    "timestamp": "3:14 pm on 11 May, 2023"
+  },
+  {
+    "id": "99",
+    "text": "Having his own dance studio and teaching others is a dream come true for Jon.",
+    "speaker": "Jon",
+    "evidence_ref": "D11:9",
+    "session_num": 11,
+    "timestamp": "3:14 pm on 11 May, 2023"
+  },
+  {
+    "id": "100",
+    "text": "Gina got accepted for a fashion internship at a part-time position in the fashion department of an international company.",
+    "speaker": "Gina",
+    "evidence_ref": "D12:1",
+    "session_num": 12,
+    "timestamp": "7:18 pm on 27 May, 2023"
+  },
+  {
+    "id": "101",
+    "text": "Jon is working on a business plan and looking for investors for his project.",
+    "speaker": "Jon",
+    "evidence_ref": "D12:12",
+    "session_num": 12,
+    "timestamp": "7:18 pm on 27 May, 2023"
+  },
+  {
+    "id": "102",
+    "text": "Jon is reading the book \"The Lean Startup\" and hoping to get tips for his business.",
+    "speaker": "Jon",
+    "evidence_ref": "D12:6",
+    "session_num": 12,
+    "timestamp": "7:18 pm on 27 May, 2023"
+  },
+  {
+    "id": "103",
+    "text": "Gina supports Jon and believes in him.",
+    "speaker": "Gina",
+    "evidence_ref": "D13:1",
+    "session_num": 13,
+    "timestamp": "8:29 pm on 13 June, 2023"
+  },
+  {
+    "id": "104",
+    "text": "Jon uses a mentor, goal setting, tracking achievements, and finding areas for improvement to stay organized and motivated.",
+    "speaker": "Jon",
+    "evidence_ref": "D13:11",
+    "session_num": 13,
+    "timestamp": "8:29 pm on 13 June, 2023"
+  },
+  {
+    "id": "105",
+    "text": "Jon uses a whiteboard to stay on track, visualize goals, and reward successes.",
+    "speaker": "Jon",
+    "evidence_ref": "D13:13",
+    "session_num": 13,
+    "timestamp": "8:29 pm on 13 June, 2023"
+  },
+  {
+    "id": "106",
+    "text": "Jon uses the system of goal setting, tracking achievements, and visualization to stay motivated and focused.",
+    "speaker": "Jon",
+    "evidence_ref": "D13:13",
+    "session_num": 13,
+    "timestamp": "8:29 pm on 13 June, 2023"
+  },
+  {
+    "id": "107",
+    "text": "Jon color-codes achievements to easily track progress and stay motivated.",
+    "speaker": "Jon",
+    "evidence_ref": "D13:15",
+    "session_num": 13,
+    "timestamp": "8:29 pm on 13 June, 2023"
+  },
+  {
+    "id": "108",
+    "text": "Gina highlights the importance of staying positive and believes in supporting others' dreams.",
+    "speaker": "Gina",
+    "evidence_ref": "D13:20",
+    "session_num": 13,
+    "timestamp": "8:29 pm on 13 June, 2023"
+  },
+  {
+    "id": "109",
+    "text": "Gina encourages Jon to keep pushing for his dreams and not give up.",
+    "speaker": "Gina",
+    "evidence_ref": "D13:22",
+    "session_num": 13,
+    "timestamp": "8:29 pm on 13 June, 2023"
+  },
+  {
+    "id": "110",
+    "text": "Jon is prepping for his own dance studio.",
+    "speaker": "Jon",
+    "evidence_ref": "D13:3",
+    "session_num": 13,
+    "timestamp": "8:29 pm on 13 June, 2023"
+  },
+  {
+    "id": "111",
+    "text": "Gina has developed a video presentation to teach how to style her fashion pieces.",
+    "speaker": "Gina",
+    "evidence_ref": "D13:4",
+    "session_num": 13,
+    "timestamp": "8:29 pm on 13 June, 2023"
+  },
+  {
+    "id": "112",
+    "text": "Jon wants his dance studio to be a place of support and encouragement for all dancers.",
+    "speaker": "Jon",
+    "evidence_ref": "D13:5",
+    "session_num": 13,
+    "timestamp": "8:29 pm on 13 June, 2023"
+  },
+  {
+    "id": "113",
+    "text": "Jon is offering one-on-one mentoring and training to help dancers reach their full potential.",
+    "speaker": "Jon",
+    "evidence_ref": "D13:7",
+    "session_num": 13,
+    "timestamp": "8:29 pm on 13 June, 2023"
+  },
+  {
+    "id": "114",
+    "text": "Gina values mentorship, having had a mentor herself when learning how to dance.",
+    "speaker": "Gina",
+    "evidence_ref": "D13:8",
+    "session_num": 13,
+    "timestamp": "8:29 pm on 13 June, 2023"
+  },
+  {
+    "id": "115",
+    "text": "Jon feels that support and guidance can help dancers shine.",
+    "speaker": "Jon",
+    "evidence_ref": "D13:9",
+    "session_num": 13,
+    "timestamp": "8:29 pm on 13 June, 2023"
+  },
+  {
+    "id": "116",
+    "text": "Jon got mentored by a business person, which was inspiring for him.",
+    "speaker": "Jon",
+    "evidence_ref": "D14:1",
+    "session_num": 14,
+    "timestamp": "9:38 pm on 16 June, 2023"
+  },
+  {
+    "id": "117",
+    "text": "Gina advises Jon to stay passionate, focused, resilient, and open to learning for entrepreneurship.",
+    "speaker": "Gina",
+    "evidence_ref": "D14:10",
+    "session_num": 14,
+    "timestamp": "9:38 pm on 16 June, 2023"
+  },
+  {
+    "id": "118",
+    "text": "Gina believes staying resilient and focused is key for entrepreneurs.",
+    "speaker": "Gina",
+    "evidence_ref": "D14:12",
+    "session_num": 14,
+    "timestamp": "9:38 pm on 16 June, 2023"
+  },
+  {
+    "id": "119",
+    "text": "Jon finds Gina's encouragement motivating and it helps him keep going.",
+    "speaker": "Jon",
+    "evidence_ref": "D14:13",
+    "session_num": 14,
+    "timestamp": "9:38 pm on 16 June, 2023"
+  },
+  {
+    "id": "120",
+    "text": "Gina shares a pic of herself dancing and mentions the tough but worth it journey.",
+    "speaker": "Gina",
+    "evidence_ref": "D14:14",
+    "session_num": 14,
+    "timestamp": "9:38 pm on 16 June, 2023"
+  },
+  {
+    "id": "121",
+    "text": "Jon is passionate about dance and loves performing.",
+    "speaker": "Jon",
+    "evidence_ref": "D14:15",
+    "session_num": 14,
+    "timestamp": "9:38 pm on 16 June, 2023"
+  },
+  {
+    "id": "122",
+    "text": "Gina encourages Jon to keep going after his dreams.",
+    "speaker": "Gina",
+    "evidence_ref": "D14:16",
+    "session_num": 14,
+    "timestamp": "9:38 pm on 16 June, 2023"
+  },
+  {
+    "id": "123",
+    "text": "Gina is working on growing the customer base for her online store.",
+    "speaker": "Gina",
+    "evidence_ref": "D14:2",
+    "session_num": 14,
+    "timestamp": "9:38 pm on 16 June, 2023"
+  },
+  {
+    "id": "124",
+    "text": "Jon is working on promoting his business.",
+    "speaker": "Jon",
+    "evidence_ref": "D14:3",
+    "session_num": 14,
+    "timestamp": "9:38 pm on 16 June, 2023"
+  },
+  {
+    "id": "125",
+    "text": "Jon posted dance videos on social media which created a stir.",
+    "speaker": "Jon",
+    "evidence_ref": "D14:5",
+    "session_num": 14,
+    "timestamp": "9:38 pm on 16 June, 2023"
+  },
+  {
+    "id": "126",
+    "text": "Gina lost her job, started an online clothing store, and enjoys being her own boss.",
+    "speaker": "Gina",
+    "evidence_ref": "D14:8",
+    "session_num": 14,
+    "timestamp": "9:38 pm on 16 June, 2023"
+  },
+  {
+    "id": "127",
+    "text": "Jon recently took a short trip to Rome to clear his mind.",
+    "speaker": "Jon",
+    "evidence_ref": "D15:1",
+    "session_num": 15,
+    "timestamp": "10:04 am on 19 June, 2023"
+  },
+  {
+    "id": "128",
+    "text": "Gina mentions she loves being around friends and having a great time.",
+    "speaker": "Gina",
+    "evidence_ref": "D15:16",
+    "session_num": 15,
+    "timestamp": "10:04 am on 19 June, 2023"
+  },
+  {
+    "id": "129",
+    "text": "Jon is working on opening a dance studio, with the official opening night being tomorrow.",
+    "speaker": "Jon",
+    "evidence_ref": "D15:3",
+    "session_num": 15,
+    "timestamp": "10:04 am on 19 June, 2023"
+  },
+  {
+    "id": "130",
+    "text": "Gina supports Jon's opening of the dance studio and expresses excitement for the launch.",
+    "speaker": "Gina",
+    "evidence_ref": "D15:6",
+    "session_num": 15,
+    "timestamp": "10:04 am on 19 June, 2023"
+  },
+  {
+    "id": "131",
+    "text": "Gina has a store where she acquired new unique pieces.",
+    "speaker": "Gina",
+    "evidence_ref": "D16:1",
+    "session_num": 16,
+    "timestamp": "2:15 pm on 21 June, 2023"
+  },
+  {
+    "id": "132",
+    "text": "Jon is writing down all his plans and goals to stay organized and motivated.",
+    "speaker": "Jon",
+    "evidence_ref": "D16:10",
+    "session_num": 16,
+    "timestamp": "2:15 pm on 21 June, 2023"
+  },
+  {
+    "id": "133",
+    "text": "Jon finds that writing down his goals helps him stay motivated and focused.",
+    "speaker": "Jon",
+    "evidence_ref": "D16:12",
+    "session_num": 16,
+    "timestamp": "2:15 pm on 21 June, 2023"
+  },
+  {
+    "id": "134",
+    "text": "Gina made a limited edition line of clothing last week to show off her style and creativity.",
+    "speaker": "Gina",
+    "evidence_ref": "D16:3",
+    "session_num": 16,
+    "timestamp": "2:15 pm on 21 June, 2023"
+  },
+  {
+    "id": "135",
+    "text": "Gina's design in her clothing line reminds her of the grit needed to stand out and face challenges.",
+    "speaker": "Gina",
+    "evidence_ref": "D16:5",
+    "session_num": 16,
+    "timestamp": "2:15 pm on 21 June, 2023"
+  },
+  {
+    "id": "136",
+    "text": "Jon has been attending networking events to make things happen after losing his job.",
+    "speaker": "Jon",
+    "evidence_ref": "D16:6",
+    "session_num": 16,
+    "timestamp": "2:15 pm on 21 June, 2023"
+  },
+  {
+    "id": "137",
+    "text": "Jon is investing his time in his business and believes it will eventually pay off.",
+    "speaker": "Jon",
+    "evidence_ref": "D16:8",
+    "session_num": 16,
+    "timestamp": "2:15 pm on 21 June, 2023"
+  },
+  {
+    "id": "138",
+    "text": "Gina got noticed by fashion editors last week.",
+    "speaker": "Gina",
+    "evidence_ref": "D17:1",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "139",
+    "text": "Jon values the support and encouragement from Gina and the community in pursuing his dreams.",
+    "speaker": "Jon",
+    "evidence_ref": "D17:10",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "140",
+    "text": "Gina believes Jon has potential and encourages him not to let anything stop him.",
+    "speaker": "Gina",
+    "evidence_ref": "D17:11",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "141",
+    "text": "Gina roots for Jon to keep going and make his dreams a reality, even when facing bumps in the road.",
+    "speaker": "Gina",
+    "evidence_ref": "D17:15",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "142",
+    "text": "Jon is determined not to let anything or anyone stop him from making his dreams come true.",
+    "speaker": "Jon",
+    "evidence_ref": "D17:16",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "143",
+    "text": "Jon expresses gratitude for Gina's belief in him and considers her a great friend.",
+    "speaker": "Jon",
+    "evidence_ref": "D17:16",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "144",
+    "text": "Gina believes that stumbling blocks can sometimes be opened doors.",
+    "speaker": "Gina",
+    "evidence_ref": "D17:3",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "145",
+    "text": "Gina supports and encourages Jon in his business dreams.",
+    "speaker": "Gina",
+    "evidence_ref": "D17:4",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "146",
+    "text": "Jon mentioned losing his job but is determined to pursue his business dreams.",
+    "speaker": "Jon",
+    "evidence_ref": "D17:4",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "147",
+    "text": "Jon started learning marketing and analytics tools to push his business forward.",
+    "speaker": "Jon",
+    "evidence_ref": "D17:4",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "148",
+    "text": "Jon aspires to guide and mentor aspiring dancers on their dreams.",
+    "speaker": "Jon",
+    "evidence_ref": "D17:6",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "149",
+    "text": "Gina considers Jon to be the perfect mentor and guide for aspiring dancers.",
+    "speaker": "Gina",
+    "evidence_ref": "D17:7",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "150",
+    "text": "Jon believes dance has the power to bring people together and create sweet moments.",
+    "speaker": "Jon",
+    "evidence_ref": "D17:8",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "151",
+    "text": "Gina is part of a solid community that cheers Jon on.",
+    "speaker": "Gina",
+    "evidence_ref": "D17:9",
+    "session_num": 17,
+    "timestamp": "1:25 pm on 9 July, 2023"
+  },
+  {
+    "id": "152",
+    "text": "Gina built a new website for customers to make orders for her clothing store last week.",
+    "speaker": "Gina",
+    "evidence_ref": "D18:1",
+    "session_num": 18,
+    "timestamp": "5:44 pm on 21 July, 2023"
+  },
+  {
+    "id": "153",
+    "text": "Jon is networking and updating his business plan and pitch to investors based on advice received.",
+    "speaker": "Jon",
+    "evidence_ref": "D18:10",
+    "session_num": 18,
+    "timestamp": "5:44 pm on 21 July, 2023"
+  },
+  {
+    "id": "154",
+    "text": "Jon is working on an online platform to showcase the dance studio's offerings.",
+    "speaker": "Jon",
+    "evidence_ref": "D18:10",
+    "session_num": 18,
+    "timestamp": "5:44 pm on 21 July, 2023"
+  },
+  {
+    "id": "155",
+    "text": "Jon expressed a need for marketing strategies, seeking advice on reaching his target audience and raising awareness for the dance studio.",
+    "speaker": "Jon",
+    "evidence_ref": "D18:12",
+    "session_num": 18,
+    "timestamp": "5:44 pm on 21 July, 2023"
+  },
+  {
+    "id": "156",
+    "text": "Gina offered to help Jon with making content and managing his social media accounts for his dance studio.",
+    "speaker": "Gina",
+    "evidence_ref": "D18:13",
+    "session_num": 18,
+    "timestamp": "5:44 pm on 21 July, 2023"
+  },
+  {
+    "id": "157",
+    "text": "Jon plans to collaborate with Gina on making content and managing his social media accounts to promote the dance studio.",
+    "speaker": "Jon",
+    "evidence_ref": "D18:14",
+    "session_num": 18,
+    "timestamp": "5:44 pm on 21 July, 2023"
+  },
+  {
+    "id": "158",
+    "text": "Gina expressed excitement to collaborate with Jon on making the dance studio shine and making a difference in the world.",
+    "speaker": "Gina",
+    "evidence_ref": "D18:17",
+    "session_num": 18,
+    "timestamp": "5:44 pm on 21 July, 2023"
+  },
+  {
+    "id": "159",
+    "text": "Jon's dance studio is on tenuous grounds, but he is staying positive and looking for investors.",
+    "speaker": "Jon",
+    "evidence_ref": "D18:2",
+    "session_num": 18,
+    "timestamp": "5:44 pm on 21 July, 2023"
+  },
+  {
+    "id": "160",
+    "text": "Jon expressed gratitude for Gina's support.",
+    "speaker": "Jon",
+    "evidence_ref": "D18:22",
+    "session_num": 18,
+    "timestamp": "5:44 pm on 21 July, 2023"
+  },
+  {
+    "id": "161",
+    "text": "Gina faced challenges in her business, particularly in sourcing trendy pieces which required research and networking.",
+    "speaker": "Gina",
+    "evidence_ref": "D18:5",
+    "session_num": 18,
+    "timestamp": "5:44 pm on 21 July, 2023"
+  },
+  {
+    "id": "162",
+    "text": "Gina advised Jon not to be scared to reach out to people in his field for help and contacts, stressing the importance of networking.",
+    "speaker": "Gina",
+    "evidence_ref": "D18:5",
+    "session_num": 18,
+    "timestamp": "5:44 pm on 21 July, 2023"
+  },
+  {
+    "id": "163",
+    "text": "Gina met some investors and got good advice at a recent networking event.",
+    "speaker": "Gina",
+    "evidence_ref": "D18:8",
+    "session_num": 18,
+    "timestamp": "5:44 pm on 21 July, 2023"
+  },
+  {
+    "id": "164",
+    "text": "Jon has been rehearsing hard and working on business plans.",
+    "speaker": "Jon",
+    "evidence_ref": "D19:1",
+    "session_num": 19,
+    "timestamp": "6:46 pm on 23 July, 2023"
+  },
+  {
+    "id": "165",
+    "text": "Dancing has kept Jon going during stressful times.",
+    "speaker": "Jon",
+    "evidence_ref": "D19:1",
+    "session_num": 19,
+    "timestamp": "6:46 pm on 23 July, 2023"
+  },
+  {
+    "id": "166",
+    "text": "Gina is supportive of Jon's dream of opening a dance studio.",
+    "speaker": "Gina",
+    "evidence_ref": "D19:10",
+    "session_num": 19,
+    "timestamp": "6:46 pm on 23 July, 2023"
+  },
+  {
+    "id": "167",
+    "text": "Gina encouraged Jon to keep up the good work and not forget his passion for dance.",
+    "speaker": "Gina",
+    "evidence_ref": "D19:6",
+    "session_num": 19,
+    "timestamp": "6:46 pm on 23 July, 2023"
+  },
+  {
+    "id": "168",
+    "text": "Jon is working on opening a studio for dancers of all ages and backgrounds.",
+    "speaker": "Jon",
+    "evidence_ref": "D19:7",
+    "session_num": 19,
+    "timestamp": "6:46 pm on 23 July, 2023"
+  }
+]

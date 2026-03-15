@@ -1,0 +1,1474 @@
+[
+  {
+    "id": "0",
+    "text": "Melanie painted a lake sunrise last year which holds special meaning to her.",
+    "speaker": "Melanie",
+    "evidence_ref": "D1:14",
+    "session_num": 1,
+    "timestamp": "1:56 pm on 8 May, 2023"
+  },
+  {
+    "id": "1",
+    "text": "Painting is a fun way for Melanie to express her feelings and get creative, helping her relax after a long day.",
+    "speaker": "Melanie",
+    "evidence_ref": "D1:16",
+    "session_num": 1,
+    "timestamp": "1:56 pm on 8 May, 2023"
+  },
+  {
+    "id": "2",
+    "text": "Melanie is going swimming with the kids after the conversation.",
+    "speaker": "Melanie",
+    "evidence_ref": "D1:18",
+    "session_num": 1,
+    "timestamp": "1:56 pm on 8 May, 2023"
+  },
+  {
+    "id": "3",
+    "text": "Melanie is currently managing kids and work and finds it overwhelming.",
+    "speaker": "Melanie",
+    "evidence_ref": "D1:2",
+    "session_num": 1,
+    "timestamp": "1:56 pm on 8 May, 2023"
+  },
+  {
+    "id": "4",
+    "text": "Caroline attended an LGBTQ support group recently and found the transgender stories inspiring.",
+    "speaker": "Caroline",
+    "evidence_ref": "D1:3",
+    "session_num": 1,
+    "timestamp": "1:56 pm on 8 May, 2023"
+  },
+  {
+    "id": "5",
+    "text": "The support group has made Caroline feel accepted and given her courage to embrace herself.",
+    "speaker": "Caroline",
+    "evidence_ref": "D1:7",
+    "session_num": 1,
+    "timestamp": "1:56 pm on 8 May, 2023"
+  },
+  {
+    "id": "6",
+    "text": "Caroline is planning to continue her education and explore career options in counseling or mental health to support those with similar issues.",
+    "speaker": "Caroline",
+    "evidence_ref": "D1:9",
+    "session_num": 1,
+    "timestamp": "1:56 pm on 8 May, 2023"
+  },
+  {
+    "id": "7",
+    "text": "Melanie ran a charity race for mental health last Saturday.",
+    "speaker": "Melanie",
+    "evidence_ref": "D2:1",
+    "session_num": 2,
+    "timestamp": "1:14 pm on 25 May, 2023"
+  },
+  {
+    "id": "8",
+    "text": "Caroline chose an adoption agency that helps LGBTQ+ folks with adoption due to their inclusivity and support.",
+    "speaker": "Caroline",
+    "evidence_ref": "D2:12",
+    "session_num": 2,
+    "timestamp": "1:14 pm on 25 May, 2023"
+  },
+  {
+    "id": "9",
+    "text": "Caroline is excited to create a family for kids who need one, even though she anticipates challenges as a single parent.",
+    "speaker": "Caroline",
+    "evidence_ref": "D2:14",
+    "session_num": 2,
+    "timestamp": "1:14 pm on 25 May, 2023"
+  },
+  {
+    "id": "10",
+    "text": "Melanie is realizing the importance of self-care and its impact on her family.",
+    "speaker": "Melanie",
+    "evidence_ref": "D2:3",
+    "session_num": 2,
+    "timestamp": "1:14 pm on 25 May, 2023"
+  },
+  {
+    "id": "11",
+    "text": "Melanie carves out me-time each day for activities like running, reading, or playing the violin.",
+    "speaker": "Melanie",
+    "evidence_ref": "D2:5",
+    "session_num": 2,
+    "timestamp": "1:14 pm on 25 May, 2023"
+  },
+  {
+    "id": "12",
+    "text": "Melanie's kids are excited about summer break and they are considering going camping next month.",
+    "speaker": "Melanie",
+    "evidence_ref": "D2:7",
+    "session_num": 2,
+    "timestamp": "1:14 pm on 25 May, 2023"
+  },
+  {
+    "id": "13",
+    "text": "Caroline is researching adoption agencies with the dream of having a family and providing a loving home to kids in need.",
+    "speaker": "Caroline",
+    "evidence_ref": "D2:8",
+    "session_num": 2,
+    "timestamp": "1:14 pm on 25 May, 2023"
+  },
+  {
+    "id": "14",
+    "text": "Caroline started transitioning three years ago.",
+    "speaker": "Caroline",
+    "evidence_ref": "D3:1",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "15",
+    "text": "Caroline gave a talk at a school event about her transgender journey and encouraged students to get involved in the LGBTQ community.",
+    "speaker": "Caroline",
+    "evidence_ref": "D3:1",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "16",
+    "text": "Caroline's friends, family, and mentors are her rocks, motivating her and giving her strength to push on.",
+    "speaker": "Caroline",
+    "evidence_ref": "D3:11",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "17",
+    "text": "Caroline has known her friends for 4 years, since moving from her home country, and values their love and help, especially after a tough breakup.",
+    "speaker": "Caroline",
+    "evidence_ref": "D3:13",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "18",
+    "text": "Melanie has a husband and kids who keep her motivated.",
+    "speaker": "Melanie",
+    "evidence_ref": "D3:14",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "19",
+    "text": "Melanie has been married for 5 years.",
+    "speaker": "Melanie",
+    "evidence_ref": "D3:16",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "20",
+    "text": "Melanie is supportive of Caroline and proud of her for spreading awareness and inspiring others in the LGBTQ community.",
+    "speaker": "Melanie",
+    "evidence_ref": "D3:2",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "21",
+    "text": "Melanie values family moments and feels they make life awesome, alive, and happy.",
+    "speaker": "Melanie",
+    "evidence_ref": "D3:20",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "22",
+    "text": "Melanie cherishes time with family and feels most alive and happy during those moments.",
+    "speaker": "Melanie",
+    "evidence_ref": "D3:22",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "23",
+    "text": "Caroline believes conversations about gender identity and inclusion are necessary and is thankful for being able to give a voice to the trans community.",
+    "speaker": "Caroline",
+    "evidence_ref": "D3:3",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "24",
+    "text": "Melanie believes talking about inclusivity and acceptance is crucial.",
+    "speaker": "Melanie",
+    "evidence_ref": "D3:4",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "25",
+    "text": "Caroline feels sharing experiences is important to help promote understanding and acceptance.",
+    "speaker": "Caroline",
+    "evidence_ref": "D3:5",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "26",
+    "text": "Caroline feels blessed with a lot of love and support throughout her journey.",
+    "speaker": "Caroline",
+    "evidence_ref": "D3:5",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "27",
+    "text": "Caroline aims to pass on the love and support she has received by sharing stories to build a strong and supportive community of hope.",
+    "speaker": "Caroline",
+    "evidence_ref": "D3:5",
+    "session_num": 3,
+    "timestamp": "7:55 pm on 9 June, 2023"
+  },
+  {
+    "id": "28",
+    "text": "Melanie values family time and finds it to be special and important.",
+    "speaker": "Melanie",
+    "evidence_ref": "D4:10",
+    "session_num": 4,
+    "timestamp": "10:37 am on 27 June, 2023"
+  },
+  {
+    "id": "29",
+    "text": "Caroline is considering a career in counseling and mental health, particularly working with trans people to help them accept themselves and support their mental health.",
+    "speaker": "Caroline",
+    "evidence_ref": "D4:11",
+    "session_num": 4,
+    "timestamp": "10:37 am on 27 June, 2023"
+  },
+  {
+    "id": "30",
+    "text": "Caroline attended an LGBTQ+ counseling workshop focused on therapeutic methods and supporting trans individuals, finding it enlightening and inspiring.",
+    "speaker": "Caroline",
+    "evidence_ref": "D4:13",
+    "session_num": 4,
+    "timestamp": "10:37 am on 27 June, 2023"
+  },
+  {
+    "id": "31",
+    "text": "Caroline's motivation to pursue counseling comes from her own journey, the support she received, and the positive impact counseling had on her life.",
+    "speaker": "Caroline",
+    "evidence_ref": "D4:15",
+    "session_num": 4,
+    "timestamp": "10:37 am on 27 June, 2023"
+  },
+  {
+    "id": "32",
+    "text": "Caroline received a special necklace as a gift from her grandmother in Sweden, symbolizing love, faith, and strength.",
+    "speaker": "Caroline",
+    "evidence_ref": "D4:3",
+    "session_num": 4,
+    "timestamp": "10:37 am on 27 June, 2023"
+  },
+  {
+    "id": "33",
+    "text": "Caroline treasures a hand-painted bowl made by a friend for her 18th birthday, which reminds her of art and self-expression.",
+    "speaker": "Caroline",
+    "evidence_ref": "D4:5",
+    "session_num": 4,
+    "timestamp": "10:37 am on 27 June, 2023"
+  },
+  {
+    "id": "34",
+    "text": "Melanie went camping with her family in the mountains last week and had a great time exploring nature, roasting marshmallows, and hiking.",
+    "speaker": "Melanie",
+    "evidence_ref": "D4:8",
+    "session_num": 4,
+    "timestamp": "10:37 am on 27 June, 2023"
+  },
+  {
+    "id": "35",
+    "text": "Caroline attended an LGBTQ+ pride parade last week and felt a sense of belonging and happiness.",
+    "speaker": "Caroline",
+    "evidence_ref": "D5:1",
+    "session_num": 5,
+    "timestamp": "1:36 pm on 3 July, 2023"
+  },
+  {
+    "id": "36",
+    "text": "Pottery is a significant part of Melanie's life as it helps her express her emotions and brings her joy.",
+    "speaker": "Melanie",
+    "evidence_ref": "D5:10",
+    "session_num": 5,
+    "timestamp": "1:36 pm on 3 July, 2023"
+  },
+  {
+    "id": "37",
+    "text": "Caroline is looking forward to attending a transgender conference this month to meet others in the community and learn about advocacy.",
+    "speaker": "Caroline",
+    "evidence_ref": "D5:13",
+    "session_num": 5,
+    "timestamp": "1:36 pm on 3 July, 2023"
+  },
+  {
+    "id": "38",
+    "text": "Caroline is considering a career in counseling and mental health to help others.",
+    "speaker": "Caroline",
+    "evidence_ref": "D5:3",
+    "session_num": 5,
+    "timestamp": "1:36 pm on 3 July, 2023"
+  },
+  {
+    "id": "39",
+    "text": "Melanie signed up for a pottery class and finds it therapeutic for self-expression and creativity.",
+    "speaker": "Melanie",
+    "evidence_ref": "D5:4",
+    "session_num": 5,
+    "timestamp": "1:36 pm on 3 July, 2023"
+  },
+  {
+    "id": "40",
+    "text": "Caroline is currently learning the piano to get creative.",
+    "speaker": "Caroline",
+    "evidence_ref": "D5:5",
+    "session_num": 5,
+    "timestamp": "1:36 pm on 3 July, 2023"
+  },
+  {
+    "id": "41",
+    "text": "Melanie is a big fan of pottery and finds it calming and creative.",
+    "speaker": "Melanie",
+    "evidence_ref": "D5:6",
+    "session_num": 5,
+    "timestamp": "1:36 pm on 3 July, 2023"
+  },
+  {
+    "id": "42",
+    "text": "Melanie made a black and white bowl in her pottery class which she is proud of.",
+    "speaker": "Melanie",
+    "evidence_ref": "D5:8",
+    "session_num": 5,
+    "timestamp": "1:36 pm on 3 July, 2023"
+  },
+  {
+    "id": "43",
+    "text": "Caroline appreciates the importance of friendship and compassion in her life and is lucky to have friends and family helping with her transition.",
+    "speaker": "Caroline",
+    "evidence_ref": "D6:11",
+    "session_num": 6,
+    "timestamp": "8:18 pm on 6 July, 2023"
+  },
+  {
+    "id": "44",
+    "text": "Caroline's friends and family have been there for her every step of the way, providing love, guidance, and acceptance during her transition.",
+    "speaker": "Caroline",
+    "evidence_ref": "D6:13",
+    "session_num": 6,
+    "timestamp": "8:18 pm on 6 July, 2023"
+  },
+  {
+    "id": "45",
+    "text": "Melanie and her family enjoy camping at the beach as it brings them closer together.",
+    "speaker": "Melanie",
+    "evidence_ref": "D6:16",
+    "session_num": 6,
+    "timestamp": "8:18 pm on 6 July, 2023"
+  },
+  {
+    "id": "46",
+    "text": "Caroline has been looking into counseling or mental health work and is passionate about helping people and making a positive impact.",
+    "speaker": "Caroline",
+    "evidence_ref": "D6:3",
+    "session_num": 6,
+    "timestamp": "8:18 pm on 6 July, 2023"
+  },
+  {
+    "id": "47",
+    "text": "Melanie took her kids to the museum recently and enjoyed seeing their excitement at the dinosaur exhibit.",
+    "speaker": "Melanie",
+    "evidence_ref": "D6:4",
+    "session_num": 6,
+    "timestamp": "8:18 pm on 6 July, 2023"
+  },
+  {
+    "id": "48",
+    "text": "Melanie loves spending time with her kids and seeing the joy in their eyes when exploring new things.",
+    "speaker": "Melanie",
+    "evidence_ref": "D6:4",
+    "session_num": 6,
+    "timestamp": "8:18 pm on 6 July, 2023"
+  },
+  {
+    "id": "49",
+    "text": "Caroline is creating a library for when she has kids, as she looks forward to reading to them and opening up their minds.",
+    "speaker": "Caroline",
+    "evidence_ref": "D6:7",
+    "session_num": 6,
+    "timestamp": "8:18 pm on 6 July, 2023"
+  },
+  {
+    "id": "50",
+    "text": "Caroline has a collection of kids' books in her library including classics, stories from different cultures, and educational books.",
+    "speaker": "Caroline",
+    "evidence_ref": "D6:9",
+    "session_num": 6,
+    "timestamp": "8:18 pm on 6 July, 2023"
+  },
+  {
+    "id": "51",
+    "text": "Caroline attended an LGBTQ conference recently and felt accepted and supported, emphasizing the importance of fighting for trans rights and spreading awareness.",
+    "speaker": "Caroline",
+    "evidence_ref": "D7:1",
+    "session_num": 7,
+    "timestamp": "4:33 pm on 12 July, 2023"
+  },
+  {
+    "id": "52",
+    "text": "Caroline's favorite guiding book is 'Becoming Nicole' by Amy Ellis Nutt, a true story about a trans girl and her family that gave her hope and connection.",
+    "speaker": "Caroline",
+    "evidence_ref": "D7:11",
+    "session_num": 7,
+    "timestamp": "4:33 pm on 12 July, 2023"
+  },
+  {
+    "id": "53",
+    "text": "According to 'Becoming Nicole,' Caroline learned the importance of self-acceptance, finding support, and the existence of hope and love.",
+    "speaker": "Caroline",
+    "evidence_ref": "D7:13",
+    "session_num": 7,
+    "timestamp": "4:33 pm on 12 July, 2023"
+  },
+  {
+    "id": "54",
+    "text": "Caroline values the role of pets in bringing joy and comfort.",
+    "speaker": "Caroline",
+    "evidence_ref": "D7:13",
+    "session_num": 7,
+    "timestamp": "4:33 pm on 12 July, 2023"
+  },
+  {
+    "id": "55",
+    "text": "Melanie has a dog named Luna and a cat named Oliver that bring joy and liveliness to her home.",
+    "speaker": "Melanie",
+    "evidence_ref": "D7:18",
+    "session_num": 7,
+    "timestamp": "4:33 pm on 12 July, 2023"
+  },
+  {
+    "id": "56",
+    "text": "Melanie finds LGBTQ events like the conference Caroline attended to be reminding of the strength of community.",
+    "speaker": "Melanie",
+    "evidence_ref": "D7:2",
+    "session_num": 7,
+    "timestamp": "4:33 pm on 12 July, 2023"
+  },
+  {
+    "id": "57",
+    "text": "Melanie got new running shoes for running, which she finds great for destressing and clearing her mind.",
+    "speaker": "Melanie",
+    "evidence_ref": "D7:20",
+    "session_num": 7,
+    "timestamp": "4:33 pm on 12 July, 2023"
+  },
+  {
+    "id": "58",
+    "text": "Running has been great for Melanie's mental health and mood.",
+    "speaker": "Melanie",
+    "evidence_ref": "D7:24",
+    "session_num": 7,
+    "timestamp": "4:33 pm on 12 July, 2023"
+  },
+  {
+    "id": "59",
+    "text": "Melanie supports Caroline's drive to make a difference in LGBTQ rights.",
+    "speaker": "Melanie",
+    "evidence_ref": "D7:4",
+    "session_num": 7,
+    "timestamp": "4:33 pm on 12 July, 2023"
+  },
+  {
+    "id": "60",
+    "text": "Caroline is looking into counseling and mental health jobs to provide support to others, motivated by her own struggles with mental health and the help she received.",
+    "speaker": "Caroline",
+    "evidence_ref": "D7:5",
+    "session_num": 7,
+    "timestamp": "4:33 pm on 12 July, 2023"
+  },
+  {
+    "id": "61",
+    "text": "Melanie reminds Caroline to pursue her dreams and appreciates the power of books in guiding and motivating her.",
+    "speaker": "Melanie",
+    "evidence_ref": "D7:8",
+    "session_num": 7,
+    "timestamp": "4:33 pm on 12 July, 2023"
+  },
+  {
+    "id": "62",
+    "text": "Melanie finds joy in flowers which represent growth, beauty, and appreciating small moments.",
+    "speaker": "Melanie",
+    "evidence_ref": "D8:12",
+    "session_num": 8,
+    "timestamp": "1:51 pm on 15 July, 2023"
+  },
+  {
+    "id": "63",
+    "text": "Melanie's favorite part of her wedding was marrying her partner and promising to be together forever.",
+    "speaker": "Melanie",
+    "evidence_ref": "D8:16",
+    "session_num": 8,
+    "timestamp": "1:51 pm on 15 July, 2023"
+  },
+  {
+    "id": "64",
+    "text": "Caroline went to a pride parade a few weeks ago and felt accepted and happy being around people who celebrated her.",
+    "speaker": "Caroline",
+    "evidence_ref": "D8:19",
+    "session_num": 8,
+    "timestamp": "1:51 pm on 15 July, 2023"
+  },
+  {
+    "id": "65",
+    "text": "Melanie took her kids to a pottery workshop last Friday where they made their own pots.",
+    "speaker": "Melanie",
+    "evidence_ref": "D8:2",
+    "session_num": 8,
+    "timestamp": "1:51 pm on 15 July, 2023"
+  },
+  {
+    "id": "66",
+    "text": "Caroline felt proud and grateful at the pride parade feeling accepted by the community.",
+    "speaker": "Caroline",
+    "evidence_ref": "D8:21",
+    "session_num": 8,
+    "timestamp": "1:51 pm on 15 July, 2023"
+  },
+  {
+    "id": "67",
+    "text": "Caroline expressed feeling comforted by being around accepting and loving people.",
+    "speaker": "Caroline",
+    "evidence_ref": "D8:21",
+    "session_num": 8,
+    "timestamp": "1:51 pm on 15 July, 2023"
+  },
+  {
+    "id": "68",
+    "text": "Caroline mentioned the importance of finding peace and mental health through expressions of authentic self.",
+    "speaker": "Caroline",
+    "evidence_ref": "D8:25",
+    "session_num": 8,
+    "timestamp": "1:51 pm on 15 July, 2023"
+  },
+  {
+    "id": "69",
+    "text": "Caroline expressed pride in the courage to transition, finding freedom in expressing herself authentically.",
+    "speaker": "Caroline",
+    "evidence_ref": "D8:25",
+    "session_num": 8,
+    "timestamp": "1:51 pm on 15 July, 2023"
+  },
+  {
+    "id": "70",
+    "text": "Melanie shared that family and creativity keep her at peace.",
+    "speaker": "Melanie",
+    "evidence_ref": "D8:28",
+    "session_num": 8,
+    "timestamp": "1:51 pm on 15 July, 2023"
+  },
+  {
+    "id": "71",
+    "text": "Melanie's family has been supportive and loving during tough times and helped her through.",
+    "speaker": "Melanie",
+    "evidence_ref": "D8:32",
+    "session_num": 8,
+    "timestamp": "1:51 pm on 15 July, 2023"
+  },
+  {
+    "id": "72",
+    "text": "Melanie and her kids enjoy nature-inspired painting projects.",
+    "speaker": "Melanie",
+    "evidence_ref": "D8:6",
+    "session_num": 8,
+    "timestamp": "1:51 pm on 15 July, 2023"
+  },
+  {
+    "id": "73",
+    "text": "Caroline attended a council meeting for adoption last Friday and found it inspiring and emotional.",
+    "speaker": "Caroline",
+    "evidence_ref": "D8:9",
+    "session_num": 8,
+    "timestamp": "1:51 pm on 15 July, 2023"
+  },
+  {
+    "id": "74",
+    "text": "Melanie went camping with her family two weekends ago.",
+    "speaker": "Melanie",
+    "evidence_ref": "D9:1",
+    "session_num": 9,
+    "timestamp": "2:31 pm on 17 July, 2023"
+  },
+  {
+    "id": "75",
+    "text": "Melanie enjoys unplugging and hanging out with her kids.",
+    "speaker": "Melanie",
+    "evidence_ref": "D9:1",
+    "session_num": 9,
+    "timestamp": "2:31 pm on 17 July, 2023"
+  },
+  {
+    "id": "76",
+    "text": "Caroline is planning an LGBTQ art show with her paintings for next month.",
+    "speaker": "Caroline",
+    "evidence_ref": "D9:12",
+    "session_num": 9,
+    "timestamp": "2:31 pm on 17 July, 2023"
+  },
+  {
+    "id": "77",
+    "text": "Caroline painted a piece inspired by a visit to an LGBTQ center, aiming to capture unity and strength.",
+    "speaker": "Caroline",
+    "evidence_ref": "D9:16",
+    "session_num": 9,
+    "timestamp": "2:31 pm on 17 July, 2023"
+  },
+  {
+    "id": "78",
+    "text": "Melanie and her kids finished a painting before the conversation.",
+    "speaker": "Melanie",
+    "evidence_ref": "D9:17",
+    "session_num": 9,
+    "timestamp": "2:31 pm on 17 July, 2023"
+  },
+  {
+    "id": "79",
+    "text": "Caroline joined a mentorship program for LGBTQ youth over the weekend.",
+    "speaker": "Caroline",
+    "evidence_ref": "D9:2",
+    "session_num": 9,
+    "timestamp": "2:31 pm on 17 July, 2023"
+  },
+  {
+    "id": "80",
+    "text": "Caroline mentors a transgender teen and they work on building confidence and positive strategies.",
+    "speaker": "Caroline",
+    "evidence_ref": "D9:6",
+    "session_num": 9,
+    "timestamp": "2:31 pm on 17 July, 2023"
+  },
+  {
+    "id": "81",
+    "text": "Caroline and her mentee had a great time at the LGBT pride event the previous month.",
+    "speaker": "Caroline",
+    "evidence_ref": "D9:6",
+    "session_num": 9,
+    "timestamp": "2:31 pm on 17 July, 2023"
+  },
+  {
+    "id": "82",
+    "text": "Melanie's family tradition includes a camping trip where they roast marshmallows and tell stories around the campfire.",
+    "speaker": "Melanie",
+    "evidence_ref": "D10:12",
+    "session_num": 10,
+    "timestamp": "8:56 pm on 20 July, 2023"
+  },
+  {
+    "id": "83",
+    "text": "Melanie and her family watched the Perseid meteor shower during a camping trip last year and it was a memorable experience.",
+    "speaker": "Melanie",
+    "evidence_ref": "D10:14",
+    "session_num": 10,
+    "timestamp": "8:56 pm on 20 July, 2023"
+  },
+  {
+    "id": "84",
+    "text": "Melanie treasures the memory of her youngest child taking her first steps.",
+    "speaker": "Melanie",
+    "evidence_ref": "D10:20",
+    "session_num": 10,
+    "timestamp": "8:56 pm on 20 July, 2023"
+  },
+  {
+    "id": "85",
+    "text": "Caroline joined a new LGBTQ activist group called 'Connected LGBTQ Activists' last Tuesday.",
+    "speaker": "Caroline",
+    "evidence_ref": "D10:3",
+    "session_num": 10,
+    "timestamp": "8:56 pm on 20 July, 2023"
+  },
+  {
+    "id": "86",
+    "text": "Caroline and her LGBTQ activist group plan events and campaigns to support each other and positive changes.",
+    "speaker": "Caroline",
+    "evidence_ref": "D10:5",
+    "session_num": 10,
+    "timestamp": "8:56 pm on 20 July, 2023"
+  },
+  {
+    "id": "87",
+    "text": "Caroline and her activist group participated in a pride parade last weekend to celebrate love and diversity.",
+    "speaker": "Caroline",
+    "evidence_ref": "D10:7",
+    "session_num": 10,
+    "timestamp": "8:56 pm on 20 July, 2023"
+  },
+  {
+    "id": "88",
+    "text": "Melanie enjoys family beach trips with her kids once or twice a year.",
+    "speaker": "Melanie",
+    "evidence_ref": "D10:8",
+    "session_num": 10,
+    "timestamp": "8:56 pm on 20 July, 2023"
+  },
+  {
+    "id": "89",
+    "text": "Melanie celebrated her daughter's birthday with a concert featuring Matt Patterson.",
+    "speaker": "Melanie",
+    "evidence_ref": "D11:1",
+    "session_num": 11,
+    "timestamp": "2:24 pm on 14 August, 2023"
+  },
+  {
+    "id": "90",
+    "text": "Melanie values special moments with her kids and is grateful for them.",
+    "speaker": "Melanie",
+    "evidence_ref": "D11:1",
+    "session_num": 11,
+    "timestamp": "2:24 pm on 14 August, 2023"
+  },
+  {
+    "id": "91",
+    "text": "Caroline's art focuses on expressing her trans experience and educating others about the trans community.",
+    "speaker": "Caroline",
+    "evidence_ref": "D11:10",
+    "session_num": 11,
+    "timestamp": "2:24 pm on 14 August, 2023"
+  },
+  {
+    "id": "92",
+    "text": "Caroline's painting 'Embracing Identity' symbolizes self-acceptance, love, and the journey to being oneself.",
+    "speaker": "Caroline",
+    "evidence_ref": "D11:12",
+    "session_num": 11,
+    "timestamp": "2:24 pm on 14 August, 2023"
+  },
+  {
+    "id": "93",
+    "text": "Melanie admires Caroline's art and appreciates the themes of self-acceptance and love.",
+    "speaker": "Melanie",
+    "evidence_ref": "D11:13",
+    "session_num": 11,
+    "timestamp": "2:24 pm on 14 August, 2023"
+  },
+  {
+    "id": "94",
+    "text": "Caroline finds art to be healing and a way to connect with her self-discovery and acceptance journey.",
+    "speaker": "Caroline",
+    "evidence_ref": "D11:14",
+    "session_num": 11,
+    "timestamp": "2:24 pm on 14 August, 2023"
+  },
+  {
+    "id": "95",
+    "text": "Caroline values sharing her art and experiences with others, such as Melanie.",
+    "speaker": "Caroline",
+    "evidence_ref": "D11:16",
+    "session_num": 11,
+    "timestamp": "2:24 pm on 14 August, 2023"
+  },
+  {
+    "id": "96",
+    "text": "Caroline attended a pride parade recently and felt inspired by the community's energy and support for LGBTQ rights.",
+    "speaker": "Caroline",
+    "evidence_ref": "D11:4",
+    "session_num": 11,
+    "timestamp": "2:24 pm on 14 August, 2023"
+  },
+  {
+    "id": "97",
+    "text": "Melanie appreciates cultivating a loving and accepting environment for her kids.",
+    "speaker": "Melanie",
+    "evidence_ref": "D11:7",
+    "session_num": 11,
+    "timestamp": "2:24 pm on 14 August, 2023"
+  },
+  {
+    "id": "98",
+    "text": "Melanie values inclusivity in her interactions and work as an artist.",
+    "speaker": "Melanie",
+    "evidence_ref": "D11:7",
+    "session_num": 11,
+    "timestamp": "2:24 pm on 14 August, 2023"
+  },
+  {
+    "id": "99",
+    "text": "Caroline represents inclusivity and diversity in her art and uses it to advocate for the LGBTQ+ community.",
+    "speaker": "Caroline",
+    "evidence_ref": "D11:8",
+    "session_num": 11,
+    "timestamp": "2:24 pm on 14 August, 2023"
+  },
+  {
+    "id": "100",
+    "text": "Caroline had a not-so-great experience on a hike where she ran into a group of religious conservatives who upset her.",
+    "speaker": "Caroline",
+    "evidence_ref": "D12:1",
+    "session_num": 12,
+    "timestamp": "1:50 pm on 17 August, 2023"
+  },
+  {
+    "id": "101",
+    "text": "Caroline values having people around her who accept and support her.",
+    "speaker": "Caroline",
+    "evidence_ref": "D12:1",
+    "session_num": 12,
+    "timestamp": "1:50 pm on 17 August, 2023"
+  },
+  {
+    "id": "102",
+    "text": "Caroline values happy moments and believes they are essential to keep going, especially during tough times.",
+    "speaker": "Caroline",
+    "evidence_ref": "D12:11",
+    "session_num": 12,
+    "timestamp": "1:50 pm on 17 August, 2023"
+  },
+  {
+    "id": "103",
+    "text": "Caroline expresses appreciation for her friendship with Melanie.",
+    "speaker": "Caroline",
+    "evidence_ref": "D12:13",
+    "session_num": 12,
+    "timestamp": "1:50 pm on 17 August, 2023"
+  },
+  {
+    "id": "104",
+    "text": "Melanie values friendship with Caroline and expresses appreciation for it.",
+    "speaker": "Melanie",
+    "evidence_ref": "D12:14",
+    "session_num": 12,
+    "timestamp": "1:50 pm on 17 August, 2023"
+  },
+  {
+    "id": "105",
+    "text": "Caroline had a great time with the whole gang at the Pride fest last year and values supportive friends.",
+    "speaker": "Caroline",
+    "evidence_ref": "D12:15",
+    "session_num": 12,
+    "timestamp": "1:50 pm on 17 August, 2023"
+  },
+  {
+    "id": "106",
+    "text": "Melanie suggests doing a family outing or planning something special for the summer with Caroline to make awesome memories.",
+    "speaker": "Melanie",
+    "evidence_ref": "D12:16",
+    "session_num": 12,
+    "timestamp": "1:50 pm on 17 August, 2023"
+  },
+  {
+    "id": "107",
+    "text": "Melanie finished another pottery project and expresses pride in her work.",
+    "speaker": "Melanie",
+    "evidence_ref": "D12:2",
+    "session_num": 12,
+    "timestamp": "1:50 pm on 17 August, 2023"
+  },
+  {
+    "id": "108",
+    "text": "Melanie's pottery project was a source of happiness and fulfillment for her.",
+    "speaker": "Melanie",
+    "evidence_ref": "D12:8",
+    "session_num": 12,
+    "timestamp": "1:50 pm on 17 August, 2023"
+  },
+  {
+    "id": "109",
+    "text": "Melanie has a strong connection to art, considering it both a sanctuary and a source of comfort.",
+    "speaker": "Melanie",
+    "evidence_ref": "D12:8",
+    "session_num": 12,
+    "timestamp": "1:50 pm on 17 August, 2023"
+  },
+  {
+    "id": "110",
+    "text": "Caroline expresses that surrounding herself with things that bring joy is important because life is too short.",
+    "speaker": "Caroline",
+    "evidence_ref": "D12:9",
+    "session_num": 12,
+    "timestamp": "1:50 pm on 17 August, 2023"
+  },
+  {
+    "id": "111",
+    "text": "Caroline took the first step towards becoming a mom by applying to adoption agencies.",
+    "speaker": "Caroline",
+    "evidence_ref": "D13:1",
+    "session_num": 13,
+    "timestamp": "3:31 pm on 23 August, 2023"
+  },
+  {
+    "id": "112",
+    "text": "Caroline attended an adoption advice/assistance group to help with her decision.",
+    "speaker": "Caroline",
+    "evidence_ref": "D13:1",
+    "session_num": 13,
+    "timestamp": "3:31 pm on 23 August, 2023"
+  },
+  {
+    "id": "113",
+    "text": "Melanie enjoys painting animals and finds it peaceful and special.",
+    "speaker": "Melanie",
+    "evidence_ref": "D13:10",
+    "session_num": 13,
+    "timestamp": "3:31 pm on 23 August, 2023"
+  },
+  {
+    "id": "114",
+    "text": "Caroline expresses herself through painting and values art for exploring identity and being therapeutic.",
+    "speaker": "Caroline",
+    "evidence_ref": "D13:13",
+    "session_num": 13,
+    "timestamp": "3:31 pm on 23 August, 2023"
+  },
+  {
+    "id": "115",
+    "text": "Melanie expresses herself through painting and values art for showing who we really are and getting in touch with ourselves.",
+    "speaker": "Melanie",
+    "evidence_ref": "D13:14",
+    "session_num": 13,
+    "timestamp": "3:31 pm on 23 August, 2023"
+  },
+  {
+    "id": "116",
+    "text": "Caroline values supportive people, promotes LGBTQ rights, and aims to live authentically.",
+    "speaker": "Caroline",
+    "evidence_ref": "D13:15",
+    "session_num": 13,
+    "timestamp": "3:31 pm on 23 August, 2023"
+  },
+  {
+    "id": "117",
+    "text": "Caroline has a guinea pig named Oscar.",
+    "speaker": "Caroline",
+    "evidence_ref": "D13:3",
+    "session_num": 13,
+    "timestamp": "3:31 pm on 23 August, 2023"
+  },
+  {
+    "id": "118",
+    "text": "Melanie has pets including another cat named Bailey.",
+    "speaker": "Melanie",
+    "evidence_ref": "D13:4",
+    "session_num": 13,
+    "timestamp": "3:31 pm on 23 August, 2023"
+  },
+  {
+    "id": "119",
+    "text": "Caroline used to go horseback riding with her dad when she was a kid.",
+    "speaker": "Caroline",
+    "evidence_ref": "D13:7",
+    "session_num": 13,
+    "timestamp": "3:31 pm on 23 August, 2023"
+  },
+  {
+    "id": "120",
+    "text": "Caroline loves horses and has a love for them.",
+    "speaker": "Caroline",
+    "evidence_ref": "D13:7",
+    "session_num": 13,
+    "timestamp": "3:31 pm on 23 August, 2023"
+  },
+  {
+    "id": "121",
+    "text": "Melanie shared a photo of her horse painting that she recently did.",
+    "speaker": "Melanie",
+    "evidence_ref": "D13:8",
+    "session_num": 13,
+    "timestamp": "3:31 pm on 23 August, 2023"
+  },
+  {
+    "id": "122",
+    "text": "Caroline went hiking last week and got into a bad spot with some people but tried to apologize.",
+    "speaker": "Caroline",
+    "evidence_ref": "D14:1",
+    "session_num": 14,
+    "timestamp": "1:33 pm on 25 August, 2023"
+  },
+  {
+    "id": "123",
+    "text": "Melanie volunteered with her family at a homeless shelter to make a difference.",
+    "speaker": "Melanie",
+    "evidence_ref": "D14:10",
+    "session_num": 14,
+    "timestamp": "1:33 pm on 25 August, 2023"
+  },
+  {
+    "id": "124",
+    "text": "Caroline transitioned and joined the transgender community seeking acceptance and support.",
+    "speaker": "Caroline",
+    "evidence_ref": "D14:13",
+    "session_num": 14,
+    "timestamp": "1:33 pm on 25 August, 2023"
+  },
+  {
+    "id": "125",
+    "text": "Caroline created a rainbow flag mural symbolizing courage and strength of the trans community.",
+    "speaker": "Caroline",
+    "evidence_ref": "D14:15",
+    "session_num": 14,
+    "timestamp": "1:33 pm on 25 August, 2023"
+  },
+  {
+    "id": "126",
+    "text": "Melanie appreciates and admires Caroline's courage as a trans person.",
+    "speaker": "Melanie",
+    "evidence_ref": "D14:16",
+    "session_num": 14,
+    "timestamp": "1:33 pm on 25 August, 2023"
+  },
+  {
+    "id": "127",
+    "text": "Caroline made a stained glass window showcasing personal journey as a transgender woman and the acceptance of growth and change.",
+    "speaker": "Caroline",
+    "evidence_ref": "D14:19",
+    "session_num": 14,
+    "timestamp": "1:33 pm on 25 August, 2023"
+  },
+  {
+    "id": "128",
+    "text": "Caroline found a vibrant rainbow sidewalk during Pride Month, which reminded her of love and acceptance.",
+    "speaker": "Caroline",
+    "evidence_ref": "D14:23",
+    "session_num": 14,
+    "timestamp": "1:33 pm on 25 August, 2023"
+  },
+  {
+    "id": "129",
+    "text": "Melanie loves painting landscapes and still life.",
+    "speaker": "Melanie",
+    "evidence_ref": "D14:30",
+    "session_num": 14,
+    "timestamp": "1:33 pm on 25 August, 2023"
+  },
+  {
+    "id": "130",
+    "text": "Melanie created a painting inspired by autumn.",
+    "speaker": "Melanie",
+    "evidence_ref": "D14:32",
+    "session_num": 14,
+    "timestamp": "1:33 pm on 25 August, 2023"
+  },
+  {
+    "id": "131",
+    "text": "Caroline is organizing an LGBTQ art show next month to showcase paintings and talents of LGBTQ artists aimed at spreading understanding and acceptance.",
+    "speaker": "Caroline",
+    "evidence_ref": "D14:33",
+    "session_num": 14,
+    "timestamp": "1:33 pm on 25 August, 2023"
+  },
+  {
+    "id": "132",
+    "text": "Melanie made a plate in pottery class and finds pottery relaxing and creative.",
+    "speaker": "Melanie",
+    "evidence_ref": "D14:4",
+    "session_num": 14,
+    "timestamp": "1:33 pm on 25 August, 2023"
+  },
+  {
+    "id": "133",
+    "text": "Caroline painted a vivid sunset inspired by a beach visit.",
+    "speaker": "Caroline",
+    "evidence_ref": "D14:7",
+    "session_num": 14,
+    "timestamp": "1:33 pm on 25 August, 2023"
+  },
+  {
+    "id": "134",
+    "text": "Caroline is involved in organizing a talent show for the kids at the youth center.",
+    "speaker": "Caroline",
+    "evidence_ref": "D15:11",
+    "session_num": 15,
+    "timestamp": "3:19 pm on 28 August, 2023"
+  },
+  {
+    "id": "135",
+    "text": "Caroline mentioned that playing the guitar helps her express her emotions.",
+    "speaker": "Caroline",
+    "evidence_ref": "D15:19",
+    "session_num": 15,
+    "timestamp": "3:19 pm on 28 August, 2023"
+  },
+  {
+    "id": "136",
+    "text": "Melanie took her kids to a park and enjoyed seeing them have fun exploring and playing.",
+    "speaker": "Melanie",
+    "evidence_ref": "D15:2",
+    "session_num": 15,
+    "timestamp": "3:19 pm on 28 August, 2023"
+  },
+  {
+    "id": "137",
+    "text": "Caroline started playing acoustic guitar about five years ago as a way to express herself and escape in her emotions.",
+    "speaker": "Caroline",
+    "evidence_ref": "D15:21",
+    "session_num": 15,
+    "timestamp": "3:19 pm on 28 August, 2023"
+  },
+  {
+    "id": "138",
+    "text": "Caroline finds the song \"Brave\" by Sara Bareilles significant and inspiring as it resonates with her journey and determination to make a difference.",
+    "speaker": "Caroline",
+    "evidence_ref": "D15:23",
+    "session_num": 15,
+    "timestamp": "3:19 pm on 28 August, 2023"
+  },
+  {
+    "id": "139",
+    "text": "Melanie plays the clarinet as a way to express herself and relax.",
+    "speaker": "Melanie",
+    "evidence_ref": "D15:26",
+    "session_num": 15,
+    "timestamp": "3:19 pm on 28 August, 2023"
+  },
+  {
+    "id": "140",
+    "text": "Melanie enjoys classical music like Bach and Mozart, as well as modern music like Ed Sheeran's \"Perfect\".",
+    "speaker": "Melanie",
+    "evidence_ref": "D15:28",
+    "session_num": 15,
+    "timestamp": "3:19 pm on 28 August, 2023"
+  },
+  {
+    "id": "141",
+    "text": "Caroline had the opportunity to volunteer at an LGBTQ+ youth center and found it gratifying to support and guide the young people there.",
+    "speaker": "Caroline",
+    "evidence_ref": "D15:3",
+    "session_num": 15,
+    "timestamp": "3:19 pm on 28 August, 2023"
+  },
+  {
+    "id": "142",
+    "text": "Caroline shared her story with the young people at the LGBTQ+ youth center and felt fulfilled by the experience.",
+    "speaker": "Caroline",
+    "evidence_ref": "D15:5",
+    "session_num": 15,
+    "timestamp": "3:19 pm on 28 August, 2023"
+  },
+  {
+    "id": "143",
+    "text": "Caroline plans to continue volunteering at the youth center as she believes in community and supporting others.",
+    "speaker": "Caroline",
+    "evidence_ref": "D15:9",
+    "session_num": 15,
+    "timestamp": "3:19 pm on 28 August, 2023"
+  },
+  {
+    "id": "144",
+    "text": "Caroline spends time with friends biking and exploring nature.",
+    "speaker": "Caroline",
+    "evidence_ref": "D16:1",
+    "session_num": 16,
+    "timestamp": "12:09 am on 13 September, 2023"
+  },
+  {
+    "id": "145",
+    "text": "Caroline made a painting representing her journey as a trans woman.",
+    "speaker": "Caroline",
+    "evidence_ref": "D16:13",
+    "session_num": 16,
+    "timestamp": "12:09 am on 13 September, 2023"
+  },
+  {
+    "id": "146",
+    "text": "Caroline's relationships have changed due to her journey, some friends were not able to handle the changes.",
+    "speaker": "Caroline",
+    "evidence_ref": "D16:15",
+    "session_num": 16,
+    "timestamp": "12:09 am on 13 September, 2023"
+  },
+  {
+    "id": "147",
+    "text": "Melanie enjoys camping with her kids, exploring the forest, and hiking.",
+    "speaker": "Melanie",
+    "evidence_ref": "D16:2",
+    "session_num": 16,
+    "timestamp": "12:09 am on 13 September, 2023"
+  },
+  {
+    "id": "148",
+    "text": "Melanie finds inspiration in seeing her kids excited about learning new things about nature.",
+    "speaker": "Melanie",
+    "evidence_ref": "D16:4",
+    "session_num": 16,
+    "timestamp": "12:09 am on 13 September, 2023"
+  },
+  {
+    "id": "149",
+    "text": "Caroline is very focused on making a difference for the LGBTQ+ community through her work.",
+    "speaker": "Caroline",
+    "evidence_ref": "D16:5",
+    "session_num": 16,
+    "timestamp": "12:09 am on 13 September, 2023"
+  },
+  {
+    "id": "150",
+    "text": "Caroline has been creating art since the age of 17.",
+    "speaker": "Caroline",
+    "evidence_ref": "D16:7",
+    "session_num": 16,
+    "timestamp": "12:09 am on 13 September, 2023"
+  },
+  {
+    "id": "151",
+    "text": "Melanie has been into art for seven years, finding a passion for painting and pottery.",
+    "speaker": "Melanie",
+    "evidence_ref": "D16:8",
+    "session_num": 16,
+    "timestamp": "12:09 am on 13 September, 2023"
+  },
+  {
+    "id": "152",
+    "text": "Melanie uses painting and pottery as a calming and satisfying creative outlet.",
+    "speaker": "Melanie",
+    "evidence_ref": "D16:8",
+    "session_num": 16,
+    "timestamp": "12:09 am on 13 September, 2023"
+  },
+  {
+    "id": "153",
+    "text": "Caroline uses art to express her feelings and explore her gender identity.",
+    "speaker": "Caroline",
+    "evidence_ref": "D16:9",
+    "session_num": 16,
+    "timestamp": "12:09 am on 13 September, 2023"
+  },
+  {
+    "id": "154",
+    "text": "Caroline is looking into adoption and contacted her mentor for advice.",
+    "speaker": "Caroline",
+    "evidence_ref": "D17:1",
+    "session_num": 17,
+    "timestamp": "10:31 am on 13 October, 2023"
+  },
+  {
+    "id": "155",
+    "text": "Melanie continued expressing herself through reading and painting during her break from pottery.",
+    "speaker": "Melanie",
+    "evidence_ref": "D17:10",
+    "session_num": 17,
+    "timestamp": "10:31 am on 13 October, 2023"
+  },
+  {
+    "id": "156",
+    "text": "Melanie enjoys expressing emotions through art, like painting inspired by sunsets and abstract art.",
+    "speaker": "Melanie",
+    "evidence_ref": "D17:13",
+    "session_num": 17,
+    "timestamp": "10:31 am on 13 October, 2023"
+  },
+  {
+    "id": "157",
+    "text": "Melanie finds blue a calming color and uses it to convey tranquility in her art.",
+    "speaker": "Melanie",
+    "evidence_ref": "D17:16",
+    "session_num": 17,
+    "timestamp": "10:31 am on 13 October, 2023"
+  },
+  {
+    "id": "158",
+    "text": "Caroline recently went to a transgender poetry reading event that was empowering and celebrated self-expression.",
+    "speaker": "Caroline",
+    "evidence_ref": "D17:19",
+    "session_num": 17,
+    "timestamp": "10:31 am on 13 October, 2023"
+  },
+  {
+    "id": "159",
+    "text": "Caroline is inspired by freedom and being true to oneself.",
+    "speaker": "Caroline",
+    "evidence_ref": "D17:23",
+    "session_num": 17,
+    "timestamp": "10:31 am on 13 October, 2023"
+  },
+  {
+    "id": "160",
+    "text": "Caroline sees adoption as a way to share her love and provide a safe, loving home for kids in need.",
+    "speaker": "Caroline",
+    "evidence_ref": "D17:3",
+    "session_num": 17,
+    "timestamp": "10:31 am on 13 October, 2023"
+  },
+  {
+    "id": "161",
+    "text": "Caroline recommends doing research, preparing emotionally, and gathering necessary documents when starting the adoption process.",
+    "speaker": "Caroline",
+    "evidence_ref": "D17:7",
+    "session_num": 17,
+    "timestamp": "10:31 am on 13 October, 2023"
+  },
+  {
+    "id": "162",
+    "text": "Melanie had a setback due to an injury that led her to take a break from pottery, which she uses for self-expression and peace.",
+    "speaker": "Melanie",
+    "evidence_ref": "D17:8",
+    "session_num": 17,
+    "timestamp": "10:31 am on 13 October, 2023"
+  },
+  {
+    "id": "163",
+    "text": "Melanie went on a road trip with her family which started off with an accident involving her son.",
+    "speaker": "Melanie",
+    "evidence_ref": "D18:1",
+    "session_num": 18,
+    "timestamp": "6:55 pm on 20 October, 2023"
+  },
+  {
+    "id": "164",
+    "text": "Melanie's son got into an accident during the road trip.",
+    "speaker": "Melanie",
+    "evidence_ref": "D18:1",
+    "session_num": 18,
+    "timestamp": "6:55 pm on 20 October, 2023"
+  },
+  {
+    "id": "165",
+    "text": "Caroline believes that loved ones give strength to tackle challenges.",
+    "speaker": "Caroline",
+    "evidence_ref": "D18:10",
+    "session_num": 18,
+    "timestamp": "6:55 pm on 20 October, 2023"
+  },
+  {
+    "id": "166",
+    "text": "Caroline appreciates seeing Melanie's love for her family and acknowledges that they are her rock.",
+    "speaker": "Caroline",
+    "evidence_ref": "D18:12",
+    "session_num": 18,
+    "timestamp": "6:55 pm on 20 October, 2023"
+  },
+  {
+    "id": "167",
+    "text": "Caroline finds nature refreshing and discussed how it can bring peace.",
+    "speaker": "Caroline",
+    "evidence_ref": "D18:18",
+    "session_num": 18,
+    "timestamp": "6:55 pm on 20 October, 2023"
+  },
+  {
+    "id": "168",
+    "text": "Melanie finds peace and serenity in nature, particularly during camping trips with her family.",
+    "speaker": "Melanie",
+    "evidence_ref": "D18:19",
+    "session_num": 18,
+    "timestamp": "6:55 pm on 20 October, 2023"
+  },
+  {
+    "id": "169",
+    "text": "Caroline acknowledged the traumatic experience of Melanie's family being in an accident during the road trip.",
+    "speaker": "Caroline",
+    "evidence_ref": "D18:2",
+    "session_num": 18,
+    "timestamp": "6:55 pm on 20 October, 2023"
+  },
+  {
+    "id": "170",
+    "text": "Melanie believes that being in nature refreshes her soul and helps her reset and recharge.",
+    "speaker": "Melanie",
+    "evidence_ref": "D18:21",
+    "session_num": 18,
+    "timestamp": "6:55 pm on 20 October, 2023"
+  },
+  {
+    "id": "171",
+    "text": "Caroline appreciates the peaceful and calming nature of spending quality time with family in nature.",
+    "speaker": "Caroline",
+    "evidence_ref": "D18:22",
+    "session_num": 18,
+    "timestamp": "6:55 pm on 20 October, 2023"
+  },
+  {
+    "id": "172",
+    "text": "Melanie's family visited the Grand Canyon and enjoyed it.",
+    "speaker": "Melanie",
+    "evidence_ref": "D18:5",
+    "session_num": 18,
+    "timestamp": "6:55 pm on 20 October, 2023"
+  },
+  {
+    "id": "173",
+    "text": "Caroline passed the adoption agency interviews last Friday and is excited about building her own family through adoption.",
+    "speaker": "Caroline",
+    "evidence_ref": "D19:1",
+    "session_num": 19,
+    "timestamp": "9:55 am on 22 October, 2023"
+  },
+  {
+    "id": "174",
+    "text": "Melanie is supportive and expresses happiness for Caroline finding her true self and helping others.",
+    "speaker": "Melanie",
+    "evidence_ref": "D19:10",
+    "session_num": 19,
+    "timestamp": "9:55 am on 22 October, 2023"
+  },
+  {
+    "id": "175",
+    "text": "Melanie values the mutual support they provide to each other and appreciates the encouragement of close ones.",
+    "speaker": "Melanie",
+    "evidence_ref": "D19:13",
+    "session_num": 19,
+    "timestamp": "9:55 am on 22 October, 2023"
+  },
+  {
+    "id": "176",
+    "text": "Melanie bought figurines that remind her of family love.",
+    "speaker": "Melanie",
+    "evidence_ref": "D19:2",
+    "session_num": 19,
+    "timestamp": "9:55 am on 22 October, 2023"
+  },
+  {
+    "id": "177",
+    "text": "Caroline's vision for the future includes creating a safe and loving home for needy kids to experience love and acceptance.",
+    "speaker": "Caroline",
+    "evidence_ref": "D19:3",
+    "session_num": 19,
+    "timestamp": "9:55 am on 22 October, 2023"
+  },
+  {
+    "id": "178",
+    "text": "Melanie appreciates Caroline's passion for helping kids and finds her inspiring.",
+    "speaker": "Melanie",
+    "evidence_ref": "D19:6",
+    "session_num": 19,
+    "timestamp": "9:55 am on 22 October, 2023"
+  },
+  {
+    "id": "179",
+    "text": "Caroline finds empowerment in making a positive difference in someone's life by offering love and support.",
+    "speaker": "Caroline",
+    "evidence_ref": "D19:7",
+    "session_num": 19,
+    "timestamp": "9:55 am on 22 October, 2023"
+  },
+  {
+    "id": "180",
+    "text": "Caroline went through a tough process of finding self-acceptance but is now ready to help others who need support.",
+    "speaker": "Caroline",
+    "evidence_ref": "D19:7",
+    "session_num": 19,
+    "timestamp": "9:55 am on 22 October, 2023"
+  },
+  {
+    "id": "181",
+    "text": "Melanie respects Caroline's journey of finding acceptance and admires her strength and inspiration to help others.",
+    "speaker": "Melanie",
+    "evidence_ref": "D19:8",
+    "session_num": 19,
+    "timestamp": "9:55 am on 22 October, 2023"
+  },
+  {
+    "id": "182",
+    "text": "Caroline received invaluable help from friends, family, and role models during the process of finding acceptance.",
+    "speaker": "Caroline",
+    "evidence_ref": "D19:9",
+    "session_num": 19,
+    "timestamp": "9:55 am on 22 October, 2023"
+  },
+  {
+    "id": "183",
+    "text": "Caroline's journey of self-discovery has been amazing and she finds joy in bringing comfort and support to others.",
+    "speaker": "Caroline",
+    "evidence_ref": "D19:9",
+    "session_num": 19,
+    "timestamp": "9:55 am on 22 October, 2023"
+  }
+]

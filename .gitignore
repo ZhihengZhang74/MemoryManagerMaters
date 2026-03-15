@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.venv/
+*.egg-info/
+memory-r1-models.zip
+models/
+*.tar
+*.tar.gz
+.ipynb_checkpoints/
+data/r1_training/embeddings_cache.json

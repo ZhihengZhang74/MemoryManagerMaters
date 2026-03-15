@@ -1,0 +1,105 @@
+bundle:
+  name: agents-memory
+
+workspace:
+  host: https://dbc-2a96ab10-ac2b.cloud.databricks.com
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      root_path: ~/.bundle/${bundle.name}/${bundle.target}
+
+  prod:
+    mode: production
+    workspace:
+      root_path: /Shared/.bundle/${bundle.name}/${bundle.target}
+
+resources:
+  jobs:
+    rl_training_aa_grpo:
+      name: "[${bundle.target}] RL Training - Answer Agent (GRPO)"
+      tasks:
+        - task_key: train_aa_grpo
+          spark_python_task:
+            python_file: ./scripts/train_memory_r1_rl_tracked.py
+            parameters:
+              - "--agent"
+              - "aa"
+              - "--method"
+              - "grpo"
+              - "--sft-adapter"
+              - "${workspace.root_path}/models/memory-r1-adapters/adapter_answer_agent"
+              - "--output-dir"
+              - "${workspace.root_path}/models/rl-checkpoints"
+              - "--episodes"
+              - "3"
+              - "--max-steps"
+              - "100"
+          new_cluster:
+            spark_version: "14.3.x-gpu-ml-scala2.12"
+            node_type_id: "g5.2xlarge"
+            num_workers: 0
+            spark_conf:
+              "spark.databricks.cluster.profile": "singleNode"
+              "spark.master": "local[*]"
+            custom_tags:
+              "ResourceClass": "SingleNode"
+          libraries:
+            - pypi:
+                package: "transformers>=4.36.0"
+            - pypi:
+                package: "trl>=0.27.2"
+            - pypi:
+                package: "peft>=0.7.0"
+            - pypi:
+                package: "torch>=2.1.0"
+            - pypi:
+                package: "datasets>=2.16.0"
+            - pypi:
+                package: "bitsandbytes>=0.41.0"
+
+    rl_training_mm_grpo:
+      name: "[${bundle.target}] RL Training - Memory Manager (GRPO)"
+      tasks:
+        - task_key: train_mm_grpo
+          spark_python_task:
+            python_file: ./scripts/train_memory_r1_rl_tracked.py
+            parameters:
+              - "--agent"
+              - "mm"
+              - "--method"
+              - "grpo"
+              - "--sft-adapter"
+              - "${workspace.root_path}/models/memory-r1-adapters/adapter_memory_manager"
+              - "--aa-adapter"
+              - "${workspace.root_path}/models/memory-r1-adapters/adapter_answer_agent"
+              - "--output-dir"
+              - "${workspace.root_path}/models/rl-checkpoints"
+              - "--episodes"
+              - "3"
+              - "--max-steps"
+              - "100"
+          new_cluster:
+            spark_version: "14.3.x-gpu-ml-scala2.12"
+            node_type_id: "g5.2xlarge"
+            num_workers: 0
+            spark_conf:
+              "spark.databricks.cluster.profile": "singleNode"
+              "spark.master": "local[*]"
+            custom_tags:
+              "ResourceClass": "SingleNode"
+          libraries:
+            - pypi:
+                package: "transformers>=4.36.0"
+            - pypi:
+                package: "trl>=0.27.2"
+            - pypi:
+                package: "peft>=0.7.0"
+            - pypi:
+                package: "torch>=2.1.0"
+            - pypi:
+                package: "datasets>=2.16.0"
+            - pypi:
+                package: "bitsandbytes>=0.41.0"
