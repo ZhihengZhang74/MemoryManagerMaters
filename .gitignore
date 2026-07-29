@@ -10,3 +10,5 @@ models/
 *.tar.gz
 .ipynb_checkpoints/
 data/r1_training/embeddings_cache.json
+logs/
+jobs/

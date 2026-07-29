@@ -14,10 +14,12 @@ import json
 import re
 import string
 import unicodedata
-from collections import Counter
-from typing import TYPE_CHECKING
+from collections import Counter, defaultdict
+from typing import TYPE_CHECKING, Any
 
 import torch
+
+from agents_memory.prompts_r1 import ANSWER_AGENT_PROMPT
 
 if TYPE_CHECKING:
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -80,6 +82,98 @@ def compute_f1(predicted: str, gold: str) -> float:
 
 
 # ---------------------------------------------------------------------------
+# Shared AA prompt construction (single source of truth, paper Figure 11)
+# ---------------------------------------------------------------------------
+
+def format_memories_for_prompt(memories: list[dict]) -> str:
+    """Format memory bank entries into the memories block used by the AA prompt.
+
+    Mirrors the training-data layout: entries grouped per speaker, prefixed with
+    timestamp when available. Entries use the bank schema fields `id` / `text`.
+    """
+    by_speaker: dict[str, list[dict]] = {}
+    no_speaker: list[dict] = []
+    for m in memories:
+        speaker = m.get("speaker")
+        if speaker:
+            by_speaker.setdefault(speaker, []).append(m)
+        else:
+            no_speaker.append(m)
+
+    def fmt(m: dict) -> str:
+        ts = m.get("timestamp")
+        text = m.get("text", "")
+        return f"- {ts}: {text}" if ts else f"- {text}"
+
+    sections = []
+    for speaker, mems in by_speaker.items():
+        body = "\n".join(fmt(m) for m in mems)
+        sections.append(f"Memories for user {speaker}:\n{body}")
+    if no_speaker:
+        body = "\n".join(fmt(m) for m in no_speaker)
+        sections.append(f"Memories:\n{body}")
+
+    return "\n\n".join(sections) if sections else "No memories available."
+
+
+def build_aa_prompt(memories: list[dict], question: str, tokenizer: AutoTokenizer) -> str:
+    """Build a fully chat-templated Answer Agent prompt from paper Figure 11.
+
+    Single source of truth shared by MM reward computation and validation eval.
+    Returns a plain string ready for LLM.generate / model.generate (no further
+    chat templating must be applied).
+    """
+    content = ANSWER_AGENT_PROMPT.format(
+        memories=format_memories_for_prompt(memories),
+        question=question,
+    )
+    return tokenizer.apply_chat_template(
+        [{"role": "user", "content": content}],
+        tokenize=False,
+        add_generation_prompt=True,
+    )
+
+
+# ---------------------------------------------------------------------------
+# vLLM batch generation helper (shared by reward + eval)
+# ---------------------------------------------------------------------------
+
+def vllm_generate_batch(
+    llm: Any,
+    prompts: list[str],
+    max_tokens: int = 512,
+    temperature: float = 0.0,
+    manage_sleep: bool = True,
+) -> list[str]:
+    """Greedy batch generation on a self-managed vLLM engine.
+
+    Wakes the engine before generating and puts it back to level-1 sleep after
+    (weights offloaded to CPU, KV cache freed) so it holds ~0 GPU memory
+    between reward calls.
+    """
+    if not prompts:
+        return []
+    from vllm import SamplingParams
+
+    if manage_sleep:
+        # Release the training process's cached-but-free CUDA blocks back to
+        # the driver first: the frozen AA engine lives in a separate process
+        # and needs physical memory for its weights when waking up.
+        torch.cuda.empty_cache()
+        llm.wake_up()
+    try:
+        outputs = llm.generate(
+            prompts,
+            SamplingParams(temperature=temperature, max_tokens=max_tokens),
+            use_tqdm=False,
+        )
+        return [out.outputs[0].text for out in outputs]
+    finally:
+        if manage_sleep:
+            llm.sleep(level=1)
+
+
+# ---------------------------------------------------------------------------
 # Memory Manager reward helpers
 # ---------------------------------------------------------------------------
 
@@ -127,14 +221,24 @@ def parse_mm_output(completion: str) -> list[dict]:
 def apply_memory_operations(memory_bank: list[dict], operations: list[dict]) -> list[dict]:
     """Apply parsed MM operations to a memory bank state."""
     bank = [m.copy() for m in memory_bank]
-    next_id = max((int(m.get("id", 0)) for m in bank), default=-1) + 1
+
+    def _safe_int(value: Any) -> int:
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return 0
+
+    next_id = max((_safe_int(m.get("id", 0)) for m in bank), default=-1) + 1
 
     for op in operations:
-        event = op.get("event", "NONE").upper()
+        if not isinstance(op, dict):
+            continue
+        event = str(op.get("event", "NONE")).upper()
 
         if event == "ADD":
+            # Ignore model-provided ids: they can collide with existing ones.
             bank.append({
-                "id": op.get("id", str(next_id)),
+                "id": str(next_id),
                 "text": op.get("text", ""),
             })
             next_id += 1
@@ -159,51 +263,54 @@ def apply_memory_operations(memory_bank: list[dict], operations: list[dict]) -> 
 class MMRewardComputer:
     """Callable reward function for Memory Manager training.
 
-    Holds a frozen AA. For each MM completion:
-    1. Parse JSON ops -> apply to memory bank -> run frozen AA -> average EM = reward
+    For each MM completion:
+    1. Parse JSON ops -> apply to memory bank -> build AA prompts for its QA pairs
+    2. Batch all (completion, qa) prompts into ONE frozen-AA generate call
+    3. Reduce: average EM per completion = reward
+
+    Supports two frozen-AA backends:
+    - `frozen_aa_llm`: a self-managed vllm.LLM (batched, fast path)
+    - `frozen_aa_model` + HF generate (serial, debug fallback)
     """
 
     def __init__(
         self,
-        frozen_aa_model: AutoModelForCausalLM,
         tokenizer: AutoTokenizer,
-        max_new_tokens: int = 2048,
+        frozen_aa_llm: Any | None = None,
+        frozen_aa_model: AutoModelForCausalLM | None = None,
+        max_new_tokens: int = 512,
         device: str | None = None,
+        manage_sleep: bool = True,
     ):
+        if frozen_aa_llm is None and frozen_aa_model is None:
+            raise ValueError("Provide either frozen_aa_llm (vLLM) or frozen_aa_model (HF)")
+        self.frozen_aa_llm = frozen_aa_llm
         self.frozen_aa = frozen_aa_model
         self.tokenizer = tokenizer
         self.max_new_tokens = max_new_tokens
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
-        self.frozen_aa.eval()
+        self.manage_sleep = manage_sleep
+        if self.frozen_aa is not None:
+            self.frozen_aa.eval()
         self.__name__ = "mm_reward"
+        # Diagnostics from the most recent call (picked up by metrics callback)
+        self.last_stats: dict = {}
 
-    def _run_frozen_aa(self, memories: list[dict], question: str) -> str:
-        """Run frozen AA on a single QA pair with given memories."""
-        memory_text = "\n".join(
-            f"- [{m.get('id', '?')}]: {m.get('text', '')}" for m in memories
-        )
-        prompt = (
-            "You are answering a question about a conversation between two people, "
-            "using retrieved memories.\n\n"
-            f"## Retrieved Memories\n{memory_text}\n\n"
-            f"## Question\n{question}\n\n"
-            "**Answer:**"
-        )
-        messages = [{"role": "user", "content": prompt}]
-        input_text = self.tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True
-        )
-        inputs = self.tokenizer(input_text, return_tensors="pt").to(self.device)
-
-        with torch.no_grad():
-            outputs = self.frozen_aa.generate(
-                **inputs,
-                max_new_tokens=self.max_new_tokens,
-                do_sample=False,
-                temperature=1.0,
-            )
-        generated = outputs[0][inputs["input_ids"].shape[1]:]
-        return self.tokenizer.decode(generated, skip_special_tokens=True)
+    def _generate_hf(self, prompts: list[str]) -> list[str]:
+        """Serial HF generate fallback. Prompts are already chat-templated."""
+        results = []
+        for prompt in prompts:
+            inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
+            with torch.no_grad():
+                outputs = self.frozen_aa.generate(
+                    **inputs,
+                    max_new_tokens=self.max_new_tokens,
+                    do_sample=False,
+                    use_cache=True,
+                )
+            generated = outputs[0][inputs["input_ids"].shape[1]:]
+            results.append(self.tokenizer.decode(generated, skip_special_tokens=True))
+        return results
 
     def __call__(
         self,
@@ -219,9 +326,22 @@ class MMRewardComputer:
             memory_bank_state: JSON-serialized memory banks (one per prompt).
             qa_pairs: JSON-serialized QA pair lists (one per prompt).
         """
-        rewards = []
-        for completion, bank_json, qa_json in zip(completions, memory_bank_state, qa_pairs):
+        # ---- Stage 1: flatten (completion, qa) pairs into one prompt list ----
+        flat_prompts: list[str] = []
+        flat_meta: list[tuple[int, str]] = []  # (completion_idx, gold_answer)
+        parse_failures = 0
+        op_counts: Counter = Counter()
+
+        for idx, (completion, bank_json, qa_json) in enumerate(
+            zip(completions, memory_bank_state, qa_pairs)
+        ):
             operations = parse_mm_output(completion)
+            if not operations:
+                parse_failures += 1
+            for op in operations:
+                if isinstance(op, dict):
+                    op_counts[str(op.get("event", "NONE")).upper()] += 1
+
             try:
                 bank = json.loads(bank_json) if isinstance(bank_json, str) else bank_json
             except json.JSONDecodeError:
@@ -233,18 +353,41 @@ class MMRewardComputer:
             except json.JSONDecodeError:
                 qa_list = []
 
-            if not qa_list:
-                rewards.append(0.0)
-                continue
-
-            em_scores = []
             for qa in qa_list:
                 question = qa.get("question", "")
                 gold = qa.get("answer", qa.get("gold_answer", ""))
-                predicted = self._run_frozen_aa(updated_bank, question)
-                answer = extract_answer_from_completion(predicted)
-                em_scores.append(compute_em(answer, gold))
+                flat_prompts.append(build_aa_prompt(updated_bank, question, self.tokenizer))
+                flat_meta.append((idx, gold))
 
-            rewards.append(sum(em_scores) / len(em_scores))
+        # ---- Stage 2: single batched frozen-AA generation ----
+        if self.frozen_aa_llm is not None:
+            texts = vllm_generate_batch(
+                self.frozen_aa_llm,
+                flat_prompts,
+                max_tokens=self.max_new_tokens,
+                temperature=0.0,
+                manage_sleep=self.manage_sleep,
+            )
+        else:
+            texts = self._generate_hf(flat_prompts)
+
+        # ---- Stage 3: reduce per-completion average EM ----
+        em_by_completion: dict[int, list[float]] = defaultdict(list)
+        for (idx, gold), text in zip(flat_meta, texts):
+            predicted = extract_answer_from_completion(text)
+            em_by_completion[idx].append(compute_em(predicted, gold))
+
+        rewards = []
+        for idx in range(len(completions)):
+            scores = em_by_completion.get(idx)
+            rewards.append(sum(scores) / len(scores) if scores else 0.0)
+
+        n = len(completions)
+        self.last_stats = {
+            "mm_json_parse_failure_rate": parse_failures / n if n else 0.0,
+            "mm_ops_total": sum(op_counts.values()),
+            **{f"mm_ops_{k.lower()}": v for k, v in op_counts.items()},
+            "mm_aa_prompts": len(flat_prompts),
+        }
 
         return rewards

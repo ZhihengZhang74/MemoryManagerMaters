@@ -10,7 +10,7 @@ from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from agents_memory.rl_eval import evaluate_mm
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from train_memory_r1_rl_tracked import load_rl_dataset_mm, load_frozen_aa, DATA_DIR, OUTPUT_DIR, MAX_SEQ_LENGTH
+from train_memory_r1_rl_tracked import load_rl_dataset_mm, load_frozen_aa_hf, DATA_DIR, OUTPUT_DIR, MAX_SEQ_LENGTH
 
 def main():
     model_name = "Qwen/Qwen2.5-7B-Instruct"
@@ -27,7 +27,7 @@ def main():
     sft_aa_path = str(OUTPUT_DIR / "memory-r1-adapters" / "adapter_answer_agent")
     rl_aa_path = str(OUTPUT_DIR / "memory-r1-rl" / "adapter_answer_agent_rl" / "best")
     print(f"Loading frozen AA from: {rl_aa_path}")
-    frozen_aa, _ = load_frozen_aa(model_name, rl_aa_path, sft_adapter_path=sft_aa_path, use_4bit=True)
+    frozen_aa = load_frozen_aa_hf(model_name, rl_aa_path)
     print("  Frozen AA loaded")
 
     # Load MM model (SFT merged + RL adapter)
@@ -41,7 +41,7 @@ def main():
         mm_base = mm_base.merge_and_unload()
         print("  SFT MM adapter merged")
 
-    rl_mm_path = str(OUTPUT_DIR / "memory-r1-rl" / "adapter_memory_manager_rl" / "final")
+    rl_mm_path = str(OUTPUT_DIR / "memory-r1-rl" / "memory_manager_rl" / "final")
     if Path(rl_mm_path).exists():
         mm_model = PeftModel.from_pretrained(mm_base, rl_mm_path)
         mm_model = mm_model.merge_and_unload()
@@ -64,6 +64,7 @@ def main():
         val_dataset=val_data,
         device=device,
         max_eval_samples=20,
+        frozen_aa_is_vllm=False,
     )
     print(f"\nResults:")
     print(f"  val_em  = {result['val_em']:.4f}")
