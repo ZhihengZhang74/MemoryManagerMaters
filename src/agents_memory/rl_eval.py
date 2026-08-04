@@ -130,6 +130,7 @@ def evaluate_mm(
     max_new_tokens_aa: int = 512,
     max_eval_samples: int = 20,
     frozen_aa_is_vllm: bool = True,
+    frozen_aa_manage_sleep: bool = True,
     **kwargs,
 ) -> dict:
     """Evaluate Memory Manager on validation set (rank0 only).
@@ -149,6 +150,8 @@ def evaluate_mm(
         max_new_tokens_aa: Maximum generation length for frozen AA answers.
         max_eval_samples: Max examples to evaluate (subsampling for speed).
         frozen_aa_is_vllm: Whether frozen_aa is a self-managed vllm.LLM.
+        frozen_aa_manage_sleep: Wake/sleep the engine around the call. Pass
+            False when the engine lives on a dedicated aux GPU (never sleeps).
 
     Returns:
         Dict with val_em, val_f1, n. Empty dict off rank0.
@@ -199,7 +202,8 @@ def evaluate_mm(
     # Batched frozen-AA scoring
     if frozen_aa_is_vllm:
         texts = vllm_generate_batch(
-            frozen_aa, flat_prompts, max_tokens=max_new_tokens_aa, temperature=0.0
+            frozen_aa, flat_prompts, max_tokens=max_new_tokens_aa, temperature=0.0,
+            manage_sleep=frozen_aa_manage_sleep,
         )
     else:
         frozen_aa.eval()

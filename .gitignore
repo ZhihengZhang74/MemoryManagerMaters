@@ -12,3 +12,4 @@ models/
 data/r1_training/embeddings_cache.json
 logs/
 jobs/
+eval/

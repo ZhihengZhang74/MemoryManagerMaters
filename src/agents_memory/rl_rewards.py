@@ -266,7 +266,13 @@ class MMRewardComputer:
     For each MM completion:
     1. Parse JSON ops -> apply to memory bank -> build AA prompts for its QA pairs
     2. Batch all (completion, qa) prompts into ONE frozen-AA generate call
-    3. Reduce: average EM per completion = reward
+    3. Reduce: per-qa correctness -> average per completion = reward
+
+    Correctness scoring (per --reward-mode):
+    - EM (default, paper Eq. 4): binary exact match against gold
+    - LLM judge (`judge` provided): 6-level graded score from a frozen judge;
+      EM is still computed and exposed in `last_stats` as an un-gameable
+      monitoring metric.
 
     Supports two frozen-AA backends:
     - `frozen_aa_llm`: a self-managed vllm.LLM (batched, fast path)
@@ -281,20 +287,50 @@ class MMRewardComputer:
         max_new_tokens: int = 512,
         device: str | None = None,
         manage_sleep: bool = True,
+        judge: Any | None = None,
+        use_delta: bool = False,
+        w_after: float = 0.7,
+        w_delta: float = 0.3,
+        correct_threshold: float = 0.5,
+        delta_keep_correct: float = 0.3,
     ):
         if frozen_aa_llm is None and frozen_aa_model is None:
             raise ValueError("Provide either frozen_aa_llm (vLLM) or frozen_aa_model (HF)")
+        if use_delta and judge is None:
+            raise ValueError("use_delta requires a judge (graded scoring for before/after)")
         self.frozen_aa_llm = frozen_aa_llm
         self.frozen_aa = frozen_aa_model
         self.tokenizer = tokenizer
         self.max_new_tokens = max_new_tokens
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.manage_sleep = manage_sleep
+        self.judge = judge  # LLMJudge instance or None (pure EM)
+        # Delta reward: R = w_after*R_after + w_delta*R_delta, where R_delta maps
+        # the before/after correctness transition (baseline = pre-op bank).
+        self.use_delta = use_delta
+        self.w_after = w_after
+        self.w_delta = w_delta
+        self.correct_threshold = correct_threshold
+        self.delta_keep_correct = delta_keep_correct
         if self.frozen_aa is not None:
             self.frozen_aa.eval()
         self.__name__ = "mm_reward"
         # Diagnostics from the most recent call (picked up by metrics callback)
         self.last_stats: dict = {}
+
+    def _delta_value(self, before_correct: bool, after_correct: bool) -> float:
+        """Map a before/after correctness transition to the delta reward.
+
+        wrong->right: +1.0 | right->right: +delta_keep_correct | wrong->wrong: 0
+        | right->wrong: -1.0
+        """
+        if before_correct and after_correct:
+            return self.delta_keep_correct
+        if not before_correct and after_correct:
+            return 1.0
+        if before_correct and not after_correct:
+            return -1.0
+        return 0.0
 
     def _generate_hf(self, prompts: list[str]) -> list[str]:
         """Serial HF generate fallback. Prompts are already chat-templated."""
@@ -326,9 +362,10 @@ class MMRewardComputer:
             memory_bank_state: JSON-serialized memory banks (one per prompt).
             qa_pairs: JSON-serialized QA pair lists (one per prompt).
         """
-        # ---- Stage 1: flatten (completion, qa) pairs into one prompt list ----
-        flat_prompts: list[str] = []
-        flat_meta: list[tuple[int, str]] = []  # (completion_idx, gold_answer)
+        # ---- Stage 1: flatten (completion, qa) pairs into prompt lists ----
+        after_prompts: list[str] = []
+        before_prompts: list[str] = []
+        flat_meta: list[tuple[int, str, str]] = []  # (completion_idx, question, gold)
         parse_failures = 0
         op_counts: Counter = Counter()
 
@@ -356,38 +393,133 @@ class MMRewardComputer:
             for qa in qa_list:
                 question = qa.get("question", "")
                 gold = qa.get("answer", qa.get("gold_answer", ""))
-                flat_prompts.append(build_aa_prompt(updated_bank, question, self.tokenizer))
-                flat_meta.append((idx, gold))
+                after_prompts.append(build_aa_prompt(updated_bank, question, self.tokenizer))
+                if self.use_delta:
+                    before_prompts.append(build_aa_prompt(bank, question, self.tokenizer))
+                flat_meta.append((idx, question, gold))
 
-        # ---- Stage 2: single batched frozen-AA generation ----
-        if self.frozen_aa_llm is not None:
-            texts = vllm_generate_batch(
-                self.frozen_aa_llm,
-                flat_prompts,
-                max_tokens=self.max_new_tokens,
-                temperature=0.0,
-                manage_sleep=self.manage_sleep,
-            )
-        else:
-            texts = self._generate_hf(flat_prompts)
+        # ---- Stage 2+3: batched frozen-AA generation, then scoring ----
+        # When this computer manages sleep (colocated layout), hold the engine
+        # awake across ALL generations and judge calls, so no call runs against
+        # a slept engine.
+        own_sleep = self.manage_sleep and self.frozen_aa_llm is not None
+        if own_sleep:
+            torch.cuda.empty_cache()
+            self.frozen_aa_llm.wake_up()
+        try:
+            def _gen(prompts: list[str]) -> list[str]:
+                if self.frozen_aa_llm is not None:
+                    return vllm_generate_batch(
+                        self.frozen_aa_llm, prompts,
+                        max_tokens=self.max_new_tokens, temperature=0.0,
+                        manage_sleep=False,
+                    )
+                return self._generate_hf(prompts)
 
-        # ---- Stage 3: reduce per-completion average EM ----
+            def _score(meta: list[tuple[int, str, str]], preds: list[str]) -> tuple[list[float], list[float]]:
+                em = [compute_em(p, g) for (_, _, g), p in zip(meta, preds)]
+                if self.judge is not None:
+                    sc = self.judge.score([(q, g, p) for (_, q, g), p in zip(meta, preds)])
+                else:
+                    sc = em
+                return sc, em
+
+            after_texts = _gen(after_prompts)
+            after_preds = [extract_answer_from_completion(t) for t in after_texts]
+            after_scores, em_values = _score(flat_meta, after_preds)
+
+            delta_values: list[float] = []
+            before_scores: list[float] = []
+            if self.use_delta:
+                before_texts = _gen(before_prompts)
+                before_preds = [extract_answer_from_completion(t) for t in before_texts]
+                before_scores, _ = _score(flat_meta, before_preds)
+                thr = self.correct_threshold
+                delta_values = [
+                    self._delta_value(b >= thr, a >= thr)
+                    for b, a in zip(before_scores, after_scores)
+                ]
+        finally:
+            if own_sleep:
+                self.frozen_aa_llm.sleep(level=1)
+
+        # ---- Reduce per completion ----
+        reward_by_completion: dict[int, list[float]] = defaultdict(list)
         em_by_completion: dict[int, list[float]] = defaultdict(list)
-        for (idx, gold), text in zip(flat_meta, texts):
-            predicted = extract_answer_from_completion(text)
-            em_by_completion[idx].append(compute_em(predicted, gold))
+        for i, (idx, _, _) in enumerate(flat_meta):
+            if self.use_delta:
+                r = self.w_after * after_scores[i] + self.w_delta * delta_values[i]
+            else:
+                r = after_scores[i]
+            reward_by_completion[idx].append(r)
+            em_by_completion[idx].append(em_values[i])
 
         rewards = []
+        em_rewards = []
         for idx in range(len(completions)):
-            scores = em_by_completion.get(idx)
-            rewards.append(sum(scores) / len(scores) if scores else 0.0)
+            s = reward_by_completion.get(idx)
+            e = em_by_completion.get(idx)
+            rewards.append(sum(s) / len(s) if s else 0.0)
+            em_rewards.append(sum(e) / len(e) if e else 0.0)
 
         n = len(completions)
         self.last_stats = {
             "mm_json_parse_failure_rate": parse_failures / n if n else 0.0,
             "mm_ops_total": sum(op_counts.values()),
             **{f"mm_ops_{k.lower()}": v for k, v in op_counts.items()},
-            "mm_aa_prompts": len(flat_prompts),
+            "mm_aa_prompts": len(after_prompts),
+            # EM is always tracked as an un-gameable monitor, even in llm mode
+            "mm_em_reward_mean": sum(em_rewards) / n if n else 0.0,
         }
+        if self.use_delta:
+            trans = Counter()
+            for b, a in zip(before_scores, after_scores):
+                key = ("R" if b >= self.correct_threshold else "W") + "2" + (
+                    "R" if a >= self.correct_threshold else "W")
+                trans[key] += 1
+            self.last_stats.update({
+                "mm_after_score_mean": (
+                    sum(after_scores) / len(after_scores) if after_scores else 0.0),
+                "mm_delta_mean": (
+                    sum(delta_values) / len(delta_values) if delta_values else 0.0),
+                **{f"mm_trans_{k}": v for k, v in sorted(trans.items())},
+            })
+        if self.judge is not None:
+            self.last_stats.update(self.judge.last_stats)
 
+        return rewards
+
+
+# ---------------------------------------------------------------------------
+# Answer Agent LLM-judge reward (callable class, --reward-mode llm)
+# ---------------------------------------------------------------------------
+
+class AAJudgeReward:
+    """Callable AA reward: 6-level graded correctness from a frozen LLM judge.
+
+    Requires the dataset to carry `question` and `gold_answer` columns.
+    EM is computed alongside and exposed via `last_stats` for monitoring.
+    """
+
+    def __init__(self, judge: Any):
+        self.judge = judge
+        self.__name__ = "aa_llm_judge_reward"
+        self.last_stats: dict = {}
+
+    def __call__(
+        self,
+        completions: list[str],
+        gold_answer: list[str],
+        question: list[str],
+        **kwargs,
+    ) -> list[float]:
+        predictions = [extract_answer_from_completion(c) for c in completions]
+        rewards = self.judge.score(list(zip(question, gold_answer, predictions)))
+
+        n = len(completions)
+        em_mean = (
+            sum(compute_em(p, g) for p, g in zip(predictions, gold_answer)) / n
+            if n else 0.0
+        )
+        self.last_stats = {"aa_em_reward_mean": em_mean, **self.judge.last_stats}
         return rewards

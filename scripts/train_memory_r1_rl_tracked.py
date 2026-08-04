@@ -21,9 +21,12 @@ from __future__ import annotations
 
 import argparse
 import copy
+import gc
 import json
 import os
 import sys
+import tempfile
+import time
 from pathlib import Path
 
 import torch
@@ -36,7 +39,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from agents_memory.rl_callbacks import MemoryR1MetricsCallback
 from agents_memory.rl_eval import evaluate_aa, evaluate_mm
+from agents_memory.rl_judge import LLMJudge
 from agents_memory.rl_rewards import (
+    AAJudgeReward,
     MMRewardComputer,
     extract_answer_from_completion,
     compute_em,
@@ -102,11 +107,17 @@ def load_rl_dataset_aa(path: Path, tokenizer, max_seq_length: int) -> Dataset:
     """Load AA data for GRPO. Transforms messages format into prompt + gold_answer.
 
     Input JSONL: {"messages": [{"role":"user","content":...}, {"role":"assistant","content":...}]}
-    Output Dataset columns: "prompt" (str with chat template), "gold_answer" (str)
+    Output Dataset columns: "prompt" (chat-templated), "gold_answer", "question"
+    (question comes from the aligned *_raw.jsonl; needed by the LLM judge).
     """
     examples = load_jsonl(path)
+    raw_path = path.with_name(path.name.replace(".jsonl", "_raw.jsonl"))
+    raw = load_jsonl(raw_path) if raw_path.exists() else [{}] * len(examples)
+    assert len(raw) == len(examples), (
+        f"ChatML ({len(examples)}) and raw ({len(raw)}) AA data must align"
+    )
     dataset_examples = []
-    for example in examples:
+    for example, raw_example in zip(examples, raw):
         user_message = example["messages"][0]["content"]
         assistant_message = example["messages"][1]["content"]
 
@@ -126,6 +137,7 @@ def load_rl_dataset_aa(path: Path, tokenizer, max_seq_length: int) -> Dataset:
         dataset_examples.append({
             "prompt": prompt,
             "gold_answer": gold_answer,
+            "question": raw_example.get("question", ""),
         })
 
     return Dataset.from_list(dataset_examples)
@@ -230,15 +242,23 @@ def load_frozen_aa_vllm(
     model_name: str,
     trained_model_path: str | None = None,
     gpu_memory_utilization: float = 0.14,
+    device_index: int | None = None,
+    keep_awake: bool = False,
 ):
-    """Load frozen Answer Agent as a per-rank vLLM engine for MM reward scoring.
+    """Load a frozen base-model vLLM engine (frozen AA scoring and/or LLM judge).
 
-    Runs in its own vLLM EngineCore subprocess (default executor), pinned to
-    this rank's GPU via a temporary CUDA_VISIBLE_DEVICES override. This keeps
+    Two placement modes:
+    - device_index=None (colocated 4-GPU layout): pinned to this rank's own
+      GPU, sleeps at level 1 between calls to give memory back to training.
+    - device_index=K (dedicated aux-GPU layout, e.g. 2+1): every rank pins its
+      engine to GPU K, which runs no training; pass keep_awake=True so the
+      engine never sleeps (no wake/sleep latency, no cumem churn).
+
+    Runs in its own vLLM EngineCore subprocess (default executor). This keeps
     it fully isolated from TRL's in-process colocated policy engine — sharing
     external_launcher state would make the policy engine's sleep(level=2)
     discard the frozen AA weights (vLLM's sleep allocator is a process-wide
-    singleton). Sleeps at level 1 (weights offloaded to CPU) between calls.
+    singleton).
 
     The torchelastic/distributed env vars set by `accelerate launch` are
     temporarily scrubbed while the engine spawns: if the EngineCore subprocess
@@ -249,10 +269,51 @@ def load_frozen_aa_vllm(
     from vllm import LLM
 
     load_path = trained_model_path if trained_model_path else model_name
-    rank0_print(f"  Loading frozen AA vLLM from: {load_path}")
+    rank0_print(f"  Loading frozen aux vLLM from: {load_path}")
 
-    # Pin to this rank's GPU (resolve BEFORE scrubbing LOCAL_RANK below).
-    device_index = local_rank()
+    # Pin target GPU (resolve BEFORE scrubbing LOCAL_RANK below).
+    shared_aux = device_index is not None
+    rank = local_rank()
+    if device_index is None:
+        device_index = rank
+
+    # Shared aux GPU: ranks must create their engines ONE AT A TIME (file
+    # gate below), and the memory budget must be derived from a live free-
+    # memory measurement. vLLM 0.19.1 imposes two competing constraints:
+    #   1. KV sizing:      util*total - used_by_others - weights - overhead >= 1 seq
+    #   2. startup check:  util*total <= free memory at engine startup
+    # A fixed util cannot satisfy both for the 2nd+ engine, so compute
+    # util = (used_by_others + weights + overhead + KV target) / total,
+    # capped just under the startup limit.
+    effective_util = gpu_memory_utilization
+    seq_path = None
+    if shared_aux:
+        seq_path = Path(tempfile.gettempdir()) / f"memr1_aux_seq_{os.getppid()}"
+        while True:
+            done = int(seq_path.read_text()) if seq_path.exists() else 0
+            if done >= rank:
+                break
+            time.sleep(2.0)
+        # Query free memory via NVML (no CUDA context side-effect on aux GPU)
+        import pynvml
+        pynvml.nvmlInit()
+        try:
+            h = pynvml.nvmlDeviceGetHandleByIndex(device_index)
+            info = pynvml.nvmlDeviceGetMemoryInfo(h)
+            free_b, total_b = float(info.free), float(info.total)
+        finally:
+            pynvml.nvmlShutdown()
+        used_others = total_b - free_b
+        weights_b = 16e9    # 7.6B bf16 weights + load margin
+        overhead_b = 4e9    # CUDA graphs / activations / context
+        kv_target_b = 20e9  # per-engine KV cache target
+        want = used_others + weights_b + overhead_b + kv_target_b
+        cap = used_others + free_b * 0.92  # stay under startup free-mem check
+        effective_util = round(min(want, cap) / total_b, 3)
+    rank0_print(
+        f"  Aux engine GPU: {device_index}  keep_awake: {keep_awake}  "
+        f"util: {effective_util:.3f}"
+    )
 
     # Env vars the spawned EngineCore must NOT inherit from accelerate/torchrun.
     scrub_vars = [
@@ -270,10 +331,10 @@ def load_frozen_aa_vllm(
         llm = LLM(
             model=load_path,
             tensor_parallel_size=1,
-            gpu_memory_utilization=gpu_memory_utilization,
+            gpu_memory_utilization=effective_util,
             max_model_len=VLLM_MAX_MODEL_LEN,
             dtype="bfloat16",
-            enable_sleep_mode=True,
+            enable_sleep_mode=not keep_awake,
             seed=0,
             max_num_batched_tokens=4096,
             trust_remote_code=True,
@@ -284,7 +345,12 @@ def load_frozen_aa_vllm(
         else:
             os.environ["CUDA_VISIBLE_DEVICES"] = prev_cvd
         os.environ.update(saved_env)
-    llm.sleep(level=1)
+        # Let the next rank start creating its engine (success or failure,
+        # so a crash doesn't leave the others waiting until the job timeout).
+        if seq_path is not None:
+            seq_path.write_text(str(rank + 1))
+    if not keep_awake:
+        llm.sleep(level=1)
     return llm
 
 
@@ -303,6 +369,91 @@ def load_frozen_aa_hf(
     for param in model.parameters():
         param.requires_grad = False
     return model
+
+
+def _barrier() -> None:
+    if torch.distributed.is_available() and torch.distributed.is_initialized():
+        torch.distributed.barrier()
+
+
+def sft_mm_coldstart(args: argparse.Namespace, output_dir: Path) -> str:
+    """Optional SFT cold-start for the Memory Manager before GRPO.
+
+    Teaches the policy the distilled ADD/UPDATE/DELETE output format from the
+    gold operations (memory_manager_train.jsonl, ChatML) so GRPO only has to
+    refine decisions rather than learn the format from scratch. Runs under the
+    same accelerate DDP process group, saves to output_dir/sft_init, and
+    returns that path for GRPO to load. Only assistant tokens are supervised.
+    """
+    from trl import SFTConfig, SFTTrainer
+
+    sft_dir = output_dir / "sft_init"
+    rank0_print("\n" + "-" * 60)
+    rank0_print(f"MM SFT cold-start: {args.mm_sft_epochs} epoch(s) -> {sft_dir}")
+    rank0_print("-" * 60)
+
+    tokenizer = AutoTokenizer.from_pretrained(args.base_model, trust_remote_code=True)
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+
+    rows = load_jsonl(DATA_DIR / "memory_manager_train.jsonl")
+    # Conversational prompt/completion format: TRL applies the chat template to
+    # each side and, with completion_only_loss, supervises ONLY the assistant
+    # completion. (Qwen2.5's template lacks {% generation %} markers, so
+    # assistant_only_loss would mask everything to zero — this format is the
+    # robust alternative.)
+    train_ds = Dataset.from_list([
+        {"prompt": [r["messages"][0]], "completion": [r["messages"][1]]}
+        for r in rows
+    ])
+    rank0_print(f"  SFT examples: {len(train_ds)}")
+
+    model = AutoModelForCausalLM.from_pretrained(
+        args.base_model, dtype=torch.bfloat16, trust_remote_code=True,
+    )
+
+    sft_config = SFTConfig(
+        output_dir=str(output_dir / "sft_trainer_output"),
+        num_train_epochs=args.mm_sft_epochs,
+        per_device_train_batch_size=args.per_device_batch_size,
+        gradient_accumulation_steps=args.grad_accum,
+        learning_rate=args.mm_sft_lr,
+        lr_scheduler_type="cosine",
+        warmup_ratio=0.03,
+        bf16=True,
+        gradient_checkpointing=True,
+        gradient_checkpointing_kwargs={"use_reentrant": False},
+        optim=args.optim,
+        max_length=VLLM_MAX_MODEL_LEN,
+        packing=False,
+        completion_only_loss=True,  # supervise only the gold-ops completion
+        logging_steps=5,
+        save_strategy="no",
+        report_to="none",
+        dataloader_num_workers=2,
+        ddp_find_unused_parameters=False,
+    )
+
+    trainer = SFTTrainer(
+        model=model,
+        args=sft_config,
+        train_dataset=train_ds,
+        processing_class=tokenizer,
+    )
+    trainer.train()
+
+    trainer.save_model(str(sft_dir))
+    if is_rank0():
+        tokenizer.save_pretrained(str(sft_dir))
+        print(f"  SFT cold-start model saved to {sft_dir}")
+
+    # Free the SFT trainer/model before GRPO reloads from disk.
+    del trainer, model
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+    _barrier()
+    return str(sft_dir)
 
 
 def print_memory_snapshot(tag: str) -> None:
@@ -388,12 +539,17 @@ def build_grpo_config(args: argparse.Namespace, output_dir: Path, max_completion
 # ---------------------------------------------------------------------------
 
 def train_aa(args: argparse.Namespace) -> Path:
-    """Phase 2: Train Answer Agent with GRPO. Reward = pure EM (Paper Eq. 4)."""
+    """Phase 2: Train Answer Agent with GRPO.
+
+    Reward per --reward-mode:
+    - em (paper Eq. 4): binary exact match
+    - llm: 6-level graded score from a frozen judge on the aux GPU
+    """
     rank0_print("\n" + "=" * 60)
-    rank0_print("PHASE 2: Answer Agent GRPO Training")
+    rank0_print(f"PHASE 2: Answer Agent GRPO Training (reward={args.reward_mode})")
     rank0_print("=" * 60)
 
-    output_dir = OUTPUT_DIR / "memory-r1-rl" / "adapter_answer_agent_rl"
+    output_dir = OUTPUT_DIR / "memory-r1-rl" / f"answer_agent_rl_{args.reward_mode}"
     if is_rank0():
         output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -413,6 +569,24 @@ def train_aa(args: argparse.Namespace) -> Path:
 
     grpo_config = build_grpo_config(args, output_dir, MAX_COMPLETION_TOKENS_AA)
 
+    # Reward selection: EM (paper) or frozen LLM judge on the aux GPU
+    if args.reward_mode == "llm":
+        judge_llm = load_frozen_aa_vllm(
+            args.base_model,
+            gpu_memory_utilization=args.vllm_aa_util,
+            device_index=args.aux_gpu,
+            keep_awake=args.aux_gpu is not None,
+        )
+        judge = LLMJudge(
+            llm=judge_llm, tokenizer=tokenizer,
+            max_tokens=args.judge_max_tokens,
+            manage_sleep=args.aux_gpu is None,
+        )
+        reward_fn = AAJudgeReward(judge)
+        print_memory_snapshot("after_judge_init")
+    else:
+        reward_fn = aa_em_reward
+
     metrics_callback = MemoryR1MetricsCallback(
         metrics_path=output_dir / "metrics.jsonl",
         phase="aa",
@@ -421,6 +595,7 @@ def train_aa(args: argparse.Namespace) -> Path:
         eval_every=args.eval_every,
         checkpoint_every=args.checkpoint_every,
         checkpoint_dir=output_dir,
+        reward_computer=reward_fn if args.reward_mode == "llm" else None,
     )
 
     print_memory_snapshot("before_trainer_init")
@@ -429,7 +604,7 @@ def train_aa(args: argparse.Namespace) -> Path:
         model=model,
         args=grpo_config,
         train_dataset=train_dataset,
-        reward_funcs=[aa_em_reward],
+        reward_funcs=[reward_fn],
         processing_class=tokenizer,
         callbacks=[metrics_callback],
     )
@@ -453,17 +628,29 @@ def train_aa(args: argparse.Namespace) -> Path:
 # ---------------------------------------------------------------------------
 
 def train_mm(args: argparse.Namespace) -> Path:
-    """Phase 1: Train Memory Manager with GRPO. Reward = indirect EM via frozen AA."""
+    """Phase 1: Train Memory Manager with GRPO.
+
+    Reward = frozen AA answers questions from the updated memory bank, then
+    per --reward-mode the answers are scored by EM (paper) or the LLM judge.
+    The frozen AA and the judge share ONE aux vLLM engine (same base model).
+    """
     rank0_print("\n" + "=" * 60)
-    rank0_print("PHASE 1: Memory Manager GRPO Training (paper trains MM first)")
+    rank0_print(f"PHASE 1: Memory Manager GRPO Training (reward={args.reward_mode})")
     rank0_print("=" * 60)
 
-    output_dir = OUTPUT_DIR / "memory-r1-rl" / "memory_manager_rl"
+    output_dir = OUTPUT_DIR / "memory-r1-rl" / f"memory_manager_rl_{args.reward_mode}"
     if is_rank0():
         output_dir.mkdir(parents=True, exist_ok=True)
+    _barrier()  # ensure output_dir exists before SFT/GRPO writes on any rank
 
-    # Setup MM policy model — no SFT warmstart, train from base model
-    model, policy_tokenizer, device = setup_model_for_grpo(args.base_model)
+    # Optional SFT cold-start: policy starts from distilled-ops weights, not base.
+    # (Frozen AA / judge below always stay the base model, per paper.)
+    grpo_init_model = args.base_model
+    if args.mm_sft_epochs > 0:
+        grpo_init_model = sft_mm_coldstart(args, output_dir)
+
+    # Setup MM policy model (base, or SFT cold-start weights if enabled)
+    model, policy_tokenizer, device = setup_model_for_grpo(grpo_init_model)
 
     # Frozen AA tokenizer (same base model family; separate name for clarity)
     aa_tokenizer = AutoTokenizer.from_pretrained(
@@ -473,6 +660,7 @@ def train_mm(args: argparse.Namespace) -> Path:
         aa_tokenizer.pad_token = aa_tokenizer.eos_token
 
     # Load frozen AA — paper uses base (untrained) AA for Phase 1
+    aux_dedicated = args.aux_gpu is not None
     if args.no_vllm:
         frozen_aa_llm = None
         frozen_aa_model = load_frozen_aa_hf(args.base_model, args.frozen_aa_path)
@@ -481,8 +669,22 @@ def train_mm(args: argparse.Namespace) -> Path:
             args.base_model,
             trained_model_path=args.frozen_aa_path,  # None = base model
             gpu_memory_utilization=args.vllm_aa_util,
+            device_index=args.aux_gpu,
+            keep_awake=aux_dedicated,
         )
         frozen_aa_model = None
+
+    # LLM judge shares the frozen AA engine (same frozen base model).
+    # Needed by both the graded "llm" reward and the "mm_delta" reward.
+    judge = None
+    if args.reward_mode in ("llm", "mm_delta"):
+        if frozen_aa_llm is None:
+            raise ValueError(f"--reward-mode {args.reward_mode} requires vLLM (drop --no-vllm)")
+        judge = LLMJudge(
+            llm=frozen_aa_llm, tokenizer=aa_tokenizer,
+            max_tokens=args.judge_max_tokens,
+            manage_sleep=False,  # MMRewardComputer owns wake/sleep around all calls
+        )
 
     print_memory_snapshot("after_frozen_aa_init")
 
@@ -505,6 +707,13 @@ def train_mm(args: argparse.Namespace) -> Path:
         frozen_aa_model=frozen_aa_model,
         max_new_tokens=args.frozen_aa_max_tokens,
         device=device,
+        manage_sleep=not aux_dedicated,
+        judge=judge,
+        use_delta=args.reward_mode == "mm_delta",
+        w_after=args.mm_w_after,
+        w_delta=args.mm_w_delta,
+        correct_threshold=args.mm_correct_threshold,
+        delta_keep_correct=args.mm_delta_keep,
     )
 
     eval_fn = None
@@ -514,6 +723,7 @@ def train_mm(args: argparse.Namespace) -> Path:
         eval_kwargs = {
             "frozen_aa": frozen_aa_llm if frozen_aa_llm is not None else frozen_aa_model,
             "frozen_aa_is_vllm": frozen_aa_llm is not None,
+            "frozen_aa_manage_sleep": not aux_dedicated,
             "val_dataset": val_data,
             "device": device,
             "max_new_tokens_aa": args.frozen_aa_max_tokens,
@@ -574,16 +784,61 @@ def parse_args() -> argparse.Namespace:
         help="Path to frozen AA model for MM training (default: base model, per paper)",
     )
     parser.add_argument(
-        "--max-steps", type=int, default=200,
-        help="Maximum training steps (default: 200, per Paper Figure 7)",
+        "--max-steps", type=int, default=100,
+        help="Maximum training steps (default: 100)",
     )
     parser.add_argument(
-        "--eval-every", type=int, default=50,
-        help="Run validation every N steps (default: 50)",
+        "--eval-every", type=int, default=10,
+        help="Run validation every N steps (default: 10)",
     )
     parser.add_argument(
         "--checkpoint-every", type=int, default=100,
         help="Save checkpoint every N steps (default: 100)",
+    )
+    parser.add_argument(
+        "--mm-sft-epochs", type=int, default=0,
+        help="MM SFT cold-start epochs before GRPO (0=off, default). Teaches the "
+        "distilled ADD/UPDATE/DELETE format from gold ops; MM phase only",
+    )
+    parser.add_argument(
+        "--mm-sft-lr", type=float, default=1e-5,
+        help="Learning rate for the MM SFT cold-start (default: 1e-5)",
+    )
+    parser.add_argument(
+        "--reward-mode", choices=["em", "llm", "mm_delta"], default="em",
+        help="Reward scoring: em = binary exact match (paper Eq. 4, default); "
+        "llm = 3-level graded score {0.0,0.5,1.0} from a frozen LLM judge; "
+        "mm_delta = w_after*R_after + w_delta*R_delta (MM only), R_after is the "
+        "3-level judge score on the post-op bank, R_delta maps the before/after "
+        "correctness transition (baseline = pre-op bank)",
+    )
+    parser.add_argument(
+        "--mm-w-after", type=float, default=0.7,
+        help="mm_delta: weight on R_after (default: 0.7)",
+    )
+    parser.add_argument(
+        "--mm-w-delta", type=float, default=0.3,
+        help="mm_delta: weight on R_delta (default: 0.3)",
+    )
+    parser.add_argument(
+        "--mm-correct-threshold", type=float, default=0.5,
+        help="mm_delta: judge score >= this counts as 'correct' for the delta "
+        "transition (default: 0.5)",
+    )
+    parser.add_argument(
+        "--mm-delta-keep", type=float, default=0.3,
+        help="mm_delta: reward for right->right (keep correct) transition "
+        "(default: 0.3; wrong->right=+1, right->wrong=-1, wrong->wrong=0)",
+    )
+    parser.add_argument(
+        "--aux-gpu", type=int, default=None,
+        help="GPU index for the shared frozen engine (frozen AA + judge). "
+        "E.g. 2 in the 2+1 layout (ranks on GPU 0/1, aux on GPU 2). "
+        "Default None = colocate on each rank's GPU with sleep mode (4-GPU layout)",
+    )
+    parser.add_argument(
+        "--judge-max-tokens", type=int, default=8,
+        help="Max new tokens for the LLM judge (choice-constrained, default: 8)",
     )
     # --- vLLM / memory pressure knobs ---
     parser.add_argument(
@@ -637,6 +892,12 @@ def main():
     rank0_print(f"  Eval every: {args.eval_every} steps")
     rank0_print(f"  Checkpoint every: {args.checkpoint_every} steps")
     rank0_print(f"  Output: {OUTPUT_DIR}")
+    rank0_print(f"  Reward mode: {args.reward_mode}")
+    rank0_print(
+        "  Aux engine: "
+        + (f"dedicated GPU {args.aux_gpu} (always awake)" if args.aux_gpu is not None
+           else "colocated per-rank (sleep level 1)")
+    )
     rank0_print(
         "  vLLM: "
         + ("disabled" if args.no_vllm
