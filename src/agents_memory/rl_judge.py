@@ -15,6 +15,7 @@ It exists to combat sparse-reward groups (measured frac_reward_zero_std was
 
 from __future__ import annotations
 
+import re
 from collections import Counter
 from typing import TYPE_CHECKING, Any
 
@@ -36,12 +37,36 @@ Predicted answer: {predicted_answer}
 
 Score:"""
 
+# Continuous scoring variant (--judge-continuous / --reward-mode mm_smooth):
+# 5-band rubric, but the judge emits any 2-decimal value in [0, 1] instead of
+# one of a few discrete levels. Decoding is regex-constrained (see below) so
+# the output is always parseable.
+JUDGE_PROMPT_CONTINUOUS = """You are an impartial judge. Given a question, a gold (reference) answer, and a predicted answer, rate how correct the predicted answer is with a CONTINUOUS score between 0.00 and 1.00 (two decimal places).
+
+Scoring rubric (pick the band, then place your exact score inside it):
+- 0.00-0.19: wrong — contradicts the gold answer, misses the key information entirely, is unrelated, or is empty
+- 0.20-0.39: mostly wrong — only incidental overlap with the gold answer
+- 0.40-0.59: partially correct — some of the key information matches, but part is missing, imprecise, or slightly wrong
+- 0.60-0.79: mostly correct — most of the key information matches; minor gaps or imprecision
+- 0.80-1.00: fully correct — conveys the same key information as the gold answer (paraphrases, or different formats of the same date/number, still count as fully correct)
+
+Question: {question}
+Gold answer: {gold_answer}
+Predicted answer: {predicted_answer}
+
+Respond with exactly one number with two decimal places (e.g. 0.73):"""
+
+# Greedy decoding under this regex can only emit a valid 2-decimal score.
+JUDGE_CONTINUOUS_REGEX = r"0\.[0-9]{2}|1\.00"
+
 
 def build_judge_prompt(
-    question: str, gold_answer: str, predicted_answer: str, tokenizer: AutoTokenizer
+    question: str, gold_answer: str, predicted_answer: str, tokenizer: AutoTokenizer,
+    continuous: bool = False,
 ) -> str:
     """Build a fully chat-templated judge prompt (ready for LLM.generate)."""
-    content = JUDGE_PROMPT.format(
+    template = JUDGE_PROMPT_CONTINUOUS if continuous else JUDGE_PROMPT
+    content = template.format(
         question=question,
         gold_answer=gold_answer,
         predicted_answer=predicted_answer if predicted_answer.strip() else "(empty)",
@@ -66,19 +91,25 @@ class LLMJudge:
         tokenizer: AutoTokenizer,
         max_tokens: int = 8,
         manage_sleep: bool = False,
+        continuous: bool = False,
     ):
         self.llm = llm
         self.tokenizer = tokenizer
         self.max_tokens = max_tokens
         # False when the engine lives on a dedicated aux GPU (stays awake).
         self.manage_sleep = manage_sleep
+        # False = legacy 3-level judge {0.0, 0.5, 1.0} (choice-constrained).
+        # True  = continuous 2-decimal score in [0, 1] (regex-constrained),
+        #         used by --judge-continuous and --reward-mode mm_smooth.
+        self.continuous = continuous
         # Diagnostics from the most recent call
         self.last_stats: dict = {}
 
     def score(self, triples: list[tuple[str, str, str]]) -> list[float]:
         """Score a batch of (question, gold_answer, predicted_answer) triples.
 
-        Returns one float in {0.0, 0.2, 0.4, 0.6, 0.8, 1.0} per triple.
+        Returns one float per triple: in {0.0, 0.5, 1.0} when discrete, or any
+        2-decimal value in [0, 1] when `continuous=True`.
         """
         if not triples:
             return []
@@ -86,13 +117,18 @@ class LLMJudge:
         from vllm.sampling_params import StructuredOutputsParams
 
         prompts = [
-            build_judge_prompt(q, gold, pred, self.tokenizer)
+            build_judge_prompt(q, gold, pred, self.tokenizer, continuous=self.continuous)
             for q, gold, pred in triples
         ]
+        constraint = (
+            StructuredOutputsParams(regex=JUDGE_CONTINUOUS_REGEX)
+            if self.continuous
+            else StructuredOutputsParams(choice=JUDGE_SCORES)
+        )
         sampling = SamplingParams(
             temperature=0.0,
             max_tokens=self.max_tokens,
-            structured_outputs=StructuredOutputsParams(choice=JUDGE_SCORES),
+            structured_outputs=constraint,
         )
 
         if self.manage_sleep:
@@ -112,11 +148,22 @@ class LLMJudge:
             text = out.outputs[0].text.strip()
             try:
                 value = float(text)
-                if text not in JUDGE_SCORES:
+                if self.continuous:
+                    if not (0.0 <= value <= 1.0):
+                        raise ValueError(text)
+                elif text not in JUDGE_SCORES:
                     raise ValueError(text)
             except ValueError:
-                parse_failures += 1
-                value = 0.0
+                # Fallback: pull the first valid number out of the text.
+                match = re.search(
+                    JUDGE_CONTINUOUS_REGEX if self.continuous else r"0\.0|0\.5|1\.0",
+                    text,
+                )
+                if match:
+                    value = float(match.group())
+                else:
+                    parse_failures += 1
+                    value = 0.0
             dist[f"{value:.1f}"] += 1
             scores.append(value)
 
@@ -125,6 +172,7 @@ class LLMJudge:
             "judge_n": n,
             "judge_parse_failure_rate": parse_failures / n if n else 0.0,
             "judge_score_mean": sum(scores) / n if n else 0.0,
+            "judge_continuous": 1.0 if self.continuous else 0.0,
             **{f"judge_dist_{k}": v for k, v in sorted(dist.items())},
         }
         return scores

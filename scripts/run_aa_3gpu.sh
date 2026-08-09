@@ -5,6 +5,7 @@
 # Effective batch stays 128 = 2 (micro-bs) x 2 (ranks) x 32 (grad accum).
 #
 # Usage: bash scripts/run_aa_3gpu.sh [em|llm] [extra args...]
+# For the continuous 2-decimal judge (same criterion as mm_smooth): bash scripts/run_aa_3gpu.sh llm --judge-continuous
 set -euo pipefail
 cd "$(dirname "$0")/.."
 source scripts/env_h200.sh

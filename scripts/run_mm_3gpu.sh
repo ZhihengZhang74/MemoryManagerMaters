@@ -4,7 +4,7 @@
 # GPU 2   = shared frozen engine: frozen AA scoring + LLM judge (always awake)
 # Effective batch stays 128 = 2 (micro-bs) x 2 (ranks) x 32 (grad accum).
 #
-# Usage: bash scripts/run_mm_3gpu.sh [em|llm|mm_delta] [extra args...]
+# Usage: bash scripts/run_mm_3gpu.sh [em|llm|mm_delta|mm_smooth] [extra args...]
 set -euo pipefail
 cd "$(dirname "$0")/.."
 source scripts/env_h200.sh

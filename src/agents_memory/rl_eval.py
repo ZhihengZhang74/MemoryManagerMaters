@@ -30,6 +30,7 @@ from agents_memory.rl_rewards import (
     compute_em,
     compute_f1,
     extract_answer_from_completion,
+    parse_mm_atomic,
     parse_mm_output,
     vllm_generate_batch,
 )
@@ -131,6 +132,7 @@ def evaluate_mm(
     max_eval_samples: int = 20,
     frozen_aa_is_vllm: bool = True,
     frozen_aa_manage_sleep: bool = True,
+    mm_gen_mode: str = "standard",
     **kwargs,
 ) -> dict:
     """Evaluate Memory Manager on validation set (rank0 only).
@@ -141,10 +143,12 @@ def evaluate_mm(
 
     Args:
         model: The MM policy model under training.
-        frozen_aa: Frozen Answer Agent — a vllm.LLM when frozen_aa_is_vllm else
+        frozen_aa: Frozen Answer Agent - a vllm.LLM when frozen_aa_is_vllm else
             an HF model.
         tokenizer: Tokenizer shared by both models.
         val_dataset: List of dicts with "prompt", "memory_bank_state", "qa_pairs".
+            In typed mode, also carries "prompt_add" / "prompt_update" /
+            "prompt_delete" / "prompt_none".
         device: Device for inference.
         max_new_tokens_mm: Maximum generation length for MM JSON output.
         max_new_tokens_aa: Maximum generation length for frozen AA answers.
@@ -152,6 +156,9 @@ def evaluate_mm(
         frozen_aa_is_vllm: Whether frozen_aa is a self-managed vllm.LLM.
         frozen_aa_manage_sleep: Wake/sleep the engine around the call. Pass
             False when the engine lives on a dedicated aux GPU (never sleeps).
+        mm_gen_mode: "standard" (default) or "typed". In typed mode, each turn
+            runs 4 typed prompts (ADD/UPDATE/DELETE/NONE) greedily, parses each
+            as an atomic operation, and applies all valid ops (union-of-4).
 
     Returns:
         Dict with val_em, val_f1, n. Empty dict off rank0.
@@ -171,20 +178,36 @@ def evaluate_mm(
 
     try:
         for example in examples:
-            prompt = example["prompt"]  # already chat-templated
             bank_json = example.get("memory_bank_state", "[]")
             qa_json = example.get("qa_pairs", "[]")
 
-            mm_completion = _hf_generate(
-                mm_model, tokenizer, prompt, device, max_new_tokens_mm
-            )
-
-            operations = parse_mm_output(mm_completion)
             try:
                 bank = json.loads(bank_json) if isinstance(bank_json, str) else bank_json
             except json.JSONDecodeError:
                 bank = []
-            updated_bank = apply_memory_operations(bank, operations)
+
+            if mm_gen_mode == "typed":
+                # Union-of-4: run 4 typed prompts, collect all valid atomic ops
+                typed_keys = ("prompt_add", "prompt_update", "prompt_delete", "prompt_none")
+                all_ops: list[dict] = []
+                for key in typed_keys:
+                    typed_prompt = example.get(key)
+                    if not typed_prompt:
+                        continue
+                    mm_completion = _hf_generate(
+                        mm_model, tokenizer, typed_prompt, device, max_new_tokens_mm
+                    )
+                    atomic = parse_mm_atomic(mm_completion)
+                    if atomic and atomic.get("event") != "NONE":
+                        all_ops.append(atomic)
+                updated_bank = apply_memory_operations(bank, all_ops)
+            else:
+                prompt = example["prompt"]  # already chat-templated
+                mm_completion = _hf_generate(
+                    mm_model, tokenizer, prompt, device, max_new_tokens_mm
+                )
+                operations = parse_mm_output(mm_completion)
+                updated_bank = apply_memory_operations(bank, operations)
 
             try:
                 qa_list = json.loads(qa_json) if isinstance(qa_json, str) else qa_json

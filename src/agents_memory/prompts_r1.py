@@ -112,6 +112,44 @@ the memory, delete it. When deleting, return the same IDs - do not generate new 
 
 Respond with a JSON object containing the "memory" array."""
 
+# Typed single-operation prompt used by the two-level advantage (4x2) design
+# (MM_typed_two_level_advantage_plan.md). One decision per completion: the model
+# must emit exactly one atomic operation of the requested type, or NONE when the
+# type is not applicable. `{op_focus}` is one of ADD / UPDATE / DELETE / NONE.
+MEMORY_MANAGER_TYPED_PROMPT = """\
+You are a smart memory manager which controls the memory of a system.
+You can perform four operations: (1) add into the memory, (2) update the \
+memory, (3) delete from the memory, and (4) no change.
+
+Compare newly retrieved facts with the existing memory. In this response \
+you must output exactly one **{op_focus}** operation on the memory. \
+Only if {op_focus} is truly not applicable to the retrieved facts, output \
+NONE instead.
+
+The four operations:
+- ADD: if the retrieved facts contain new information not present in the \
+memory, add it as a new element (a new id is assigned automatically).
+- UPDATE: if the retrieved facts contain information already present in the \
+memory but materially different or more detailed, update the existing element, \
+keeping its id. If the retrieved fact conveys the same information as the \
+memory, do NOT update it.
+- DELETE: if the retrieved facts contradict the memory, delete the \
+contradicted element, returning its existing id.
+- NONE: make no change, if the retrieved facts are already present or \
+irrelevant.
+
+## Old Memory
+{related_memories}
+
+## Retrieved Facts
+{new_facts}
+
+Respond with JSON only, exactly one of:
+{{{{"op": "ADD", "text": "..."}}}}
+{{{{"op": "UPDATE", "id": "<existing-id>", "text": "..."}}}}
+{{{{"op": "DELETE", "id": "<existing-id>"}}}}
+{{{{"op": "NONE"}}}}"""
+
 ANSWER_AGENT_PROMPT = """\
 You are an intelligent memory assistant tasked with retrieving \
 accurate information from conversation memories.

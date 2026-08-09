@@ -37,8 +37,10 @@ from trl import GRPOConfig, GRPOTrainer
 # Add src/ to path for local imports
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+from agents_memory.prompts_r1 import MEMORY_MANAGER_TYPED_PROMPT
 from agents_memory.rl_callbacks import MemoryR1MetricsCallback
 from agents_memory.rl_eval import evaluate_aa, evaluate_mm
+from agents_memory.rl_grpo import TypedTwoLevelGRPOTrainer
 from agents_memory.rl_judge import LLMJudge
 from agents_memory.rl_rewards import (
     AAJudgeReward,
@@ -46,6 +48,7 @@ from agents_memory.rl_rewards import (
     extract_answer_from_completion,
     compute_em,
     compute_f1,
+    parse_mm_atomic,
 )
 
 # ---------------------------------------------------------------------------
@@ -143,10 +146,45 @@ def load_rl_dataset_aa(path: Path, tokenizer, max_seq_length: int) -> Dataset:
     return Dataset.from_list(dataset_examples)
 
 
-def load_rl_dataset_mm(path: Path, tokenizer, max_seq_length: int) -> Dataset:
+def _build_typed_prompt(raw: dict, op_focus: str, tokenizer, max_seq_length: int) -> str | None:
+    """Build a single chat-templated typed MM prompt for one op_focus.
+
+    Returns None if the templated prompt exceeds max_seq_length.
+    Reuses the same related_memories / new_facts rendering as prepare_r1_data.py.
+    """
+    turn = raw["turn"]
+    related = raw.get("related_memories") or []
+    related_memories = (
+        json.dumps(related, indent=2) if related else "No existing memories yet."
+    )
+    new_facts = f"- [{turn['speaker']}] ({turn['timestamp']}) {turn['text']}"
+    content = MEMORY_MANAGER_TYPED_PROMPT.format(
+        op_focus=op_focus,
+        related_memories=related_memories,
+        new_facts=new_facts,
+    )
+    prompt = tokenizer.apply_chat_template(
+        [{"role": "user", "content": content}],
+        tokenize=False,
+        add_generation_prompt=True,
+    )
+    if len(tokenizer.encode(prompt)) > max_seq_length:
+        return None
+    return prompt
+
+
+def load_rl_dataset_mm(
+    path: Path, tokenizer, max_seq_length: int, mm_gen_mode: str = "standard",
+) -> Dataset:
     """Load MM data for GRPO. Builds running memory bank and pairs with QA.
 
-    Each example gets: prompt, memory_bank_state (JSON), qa_pairs (JSON)
+    Each example gets: prompt, memory_bank_state (JSON), qa_pairs (JSON).
+
+    In typed mode (mm_gen_mode="typed") each example additionally carries the
+    four typed prompts (prompt_add / prompt_update / prompt_delete / prompt_none)
+    for the 4x2 two-level advantage design; `prompt` is kept as the prompt_none
+    placeholder for backward compatibility. Typed prompts are rendered from the
+    raw `related_memories` / turn fields so the op_focus instruction is present.
     """
     mm_chatml = load_jsonl(path)
     split = "val" if "_val" in Path(path).name else "train"
@@ -198,6 +236,26 @@ def load_rl_dataset_mm(path: Path, tokenizer, max_seq_length: int) -> Dataset:
                 running_bank = [m for m in running_bank if m["id"] != op["id"]]
 
         if not qa_pairs:
+            continue
+
+        if mm_gen_mode == "typed":
+            typed_prompts = {}
+            for focus in ("ADD", "UPDATE", "DELETE", "NONE"):
+                p = _build_typed_prompt(raw, focus, tokenizer, max_seq_length)
+                if p is None:
+                    break  # too long; skip this turn entirely
+                typed_prompts[f"prompt_{focus.lower()}"] = p
+            if len(typed_prompts) != 4:
+                continue
+            dataset_examples.append({
+                "prompt": typed_prompts["prompt_none"],
+                "prompt_add": typed_prompts["prompt_add"],
+                "prompt_update": typed_prompts["prompt_update"],
+                "prompt_delete": typed_prompts["prompt_delete"],
+                "prompt_none": typed_prompts["prompt_none"],
+                "memory_bank_state": json.dumps(memory_bank_state),
+                "qa_pairs": json.dumps(qa_pairs),
+            })
             continue
 
         if len(tokenizer.encode(prompt)) > max_seq_length:
@@ -376,6 +434,91 @@ def _barrier() -> None:
         torch.distributed.barrier()
 
 
+def _build_typed_sft_dataset(tokenizer) -> Dataset:
+    """Build typed SFT data from gold ops (online, no new data file).
+
+    For each turn's each gold op (event=E): one sample = (prompt_E, atomic JSON).
+    For each turn's missing type T: sample (prompt_T, {"op":"NONE"}), balanced
+    so NONE samples per type <= 2x positive samples of that type (fixed seed).
+    """
+    import random
+
+    raw_rows = load_jsonl(DATA_DIR / "memory_manager_train_raw.jsonl")
+    rng = random.Random(42)
+
+    ALL_TYPES = ("ADD", "UPDATE", "DELETE", "NONE")
+    samples: list[dict] = []
+
+    # Track positive sample counts per type for NONE balancing
+    type_pos_counts: dict[str, int] = {t: 0 for t in ALL_TYPES}
+    none_candidates: dict[str, list[dict]] = {t: [] for t in ALL_TYPES}
+
+    for raw in raw_rows:
+        # Build typed prompts for this turn
+        typed_prompts: dict[str, str | None] = {}
+        for focus in ALL_TYPES:
+            p = _build_typed_prompt(raw, focus, tokenizer, MAX_SEQ_LENGTH)
+            typed_prompts[focus] = p
+        if any(v is None for v in typed_prompts.values()):
+            continue
+
+        # Determine which types appear as gold ops this turn
+        present_types: set[str] = set()
+        for op in raw.get("operations", []):
+            event = str(op.get("event", "NONE")).upper()
+            if event in ("ADD", "UPDATE", "DELETE"):
+                present_types.add(event)
+                # Build the atomic JSON completion for this gold op
+                if event == "ADD":
+                    atomic = {"op": "ADD", "text": op.get("text", "")}
+                elif event == "UPDATE":
+                    atomic = {"op": "UPDATE", "id": str(op.get("id", "")), "text": op.get("text", "")}
+                elif event == "DELETE":
+                    atomic = {"op": "DELETE", "id": str(op.get("id", ""))}
+                completion_str = json.dumps(atomic)
+                prompt_msg = [{"role": "user", "content": _strip_chat_template(typed_prompts[event])}]
+                comp_msg = [{"role": "assistant", "content": completion_str}]
+                samples.append({"prompt": prompt_msg, "completion": comp_msg})
+                type_pos_counts[event] += 1
+
+        # For missing types, create NONE samples (balanced later)
+        for t in ALL_TYPES:
+            if t not in present_types:
+                none_atomic = json.dumps({"op": "NONE"})
+                prompt_msg = [{"role": "user", "content": _strip_chat_template(typed_prompts[t])}]
+                comp_msg = [{"role": "assistant", "content": none_atomic}]
+                none_candidates[t].append({"prompt": prompt_msg, "completion": comp_msg})
+
+    # Balance NONE samples: per type <= 2x positive samples of that type
+    for t in ALL_TYPES:
+        cap = 2 * type_pos_counts.get(t, 0)
+        candidates = none_candidates[t]
+        if len(candidates) > cap:
+            candidates = rng.sample(candidates, cap)
+        samples.extend(candidates)
+
+    rng.shuffle(samples)
+    return Dataset.from_list(samples)
+
+
+def _strip_chat_template(prompt_str: str) -> str:
+    """Extract the user content from a chat-templated prompt string.
+
+    The typed prompts from _build_typed_prompt are already chat-templated; for
+    SFT's conversational format we need the raw user content so SFTTrainer can
+    re-apply the template. This is a best-effort extraction: strip the system/
+    generation markers added by Qwen2.5's chat template.
+    """
+    # Qwen2.5 chat template wraps with <|im_start|>user\n...<|im_end|>\n<|im_start|>assistant
+    marker = "<|im_start|>user\n"
+    if marker in prompt_str:
+        start = prompt_str.index(marker) + len(marker)
+        end = prompt_str.rfind("<|im_end|>")
+        if end > start:
+            return prompt_str[start:end].strip()
+    return prompt_str
+
+
 def sft_mm_coldstart(args: argparse.Namespace, output_dir: Path) -> str:
     """Optional SFT cold-start for the Memory Manager before GRPO.
 
@@ -384,6 +527,11 @@ def sft_mm_coldstart(args: argparse.Namespace, output_dir: Path) -> str:
     refine decisions rather than learn the format from scratch. Runs under the
     same accelerate DDP process group, saves to output_dir/sft_init, and
     returns that path for GRPO to load. Only assistant tokens are supervised.
+
+    In typed mode (--mm-gen-mode typed), SFT data is constructed online from
+    the raw gold ops: for each gold op (event=E) one sample (prompt_E, atomic
+    JSON); for each turn's missing types T a (prompt_T, {"op":"NONE"}) sample,
+    balanced so NONE samples per type <= 2x positive samples (fixed seed).
     """
     from trl import SFTConfig, SFTTrainer
 
@@ -396,16 +544,19 @@ def sft_mm_coldstart(args: argparse.Namespace, output_dir: Path) -> str:
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    rows = load_jsonl(DATA_DIR / "memory_manager_train.jsonl")
-    # Conversational prompt/completion format: TRL applies the chat template to
-    # each side and, with completion_only_loss, supervises ONLY the assistant
-    # completion. (Qwen2.5's template lacks {% generation %} markers, so
-    # assistant_only_loss would mask everything to zero — this format is the
-    # robust alternative.)
-    train_ds = Dataset.from_list([
-        {"prompt": [r["messages"][0]], "completion": [r["messages"][1]]}
-        for r in rows
-    ])
+    if args.mm_gen_mode == "typed":
+        train_ds = _build_typed_sft_dataset(tokenizer)
+    else:
+        rows = load_jsonl(DATA_DIR / "memory_manager_train.jsonl")
+        # Conversational prompt/completion format: TRL applies the chat template to
+        # each side and, with completion_only_loss, supervises ONLY the assistant
+        # completion. (Qwen2.5's template lacks {% generation %} markers, so
+        # assistant_only_loss would mask everything to zero - this format is the
+        # robust alternative.)
+        train_ds = Dataset.from_list([
+            {"prompt": [r["messages"][0]], "completion": [r["messages"][1]]}
+            for r in rows
+        ])
     rank0_print(f"  SFT examples: {len(train_ds)}")
 
     model = AutoModelForCausalLM.from_pretrained(
@@ -549,7 +700,8 @@ def train_aa(args: argparse.Namespace) -> Path:
     rank0_print(f"PHASE 2: Answer Agent GRPO Training (reward={args.reward_mode})")
     rank0_print("=" * 60)
 
-    output_dir = OUTPUT_DIR / "memory-r1-rl" / f"answer_agent_rl_{args.reward_mode}"
+    tag_suffix = f"_{args.run_tag}" if args.run_tag else ""
+    output_dir = OUTPUT_DIR / "memory-r1-rl" / f"answer_agent_rl_{args.reward_mode}{tag_suffix}"
     if is_rank0():
         output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -581,6 +733,7 @@ def train_aa(args: argparse.Namespace) -> Path:
             llm=judge_llm, tokenizer=tokenizer,
             max_tokens=args.judge_max_tokens,
             manage_sleep=args.aux_gpu is None,
+            continuous=args.judge_continuous,
         )
         reward_fn = AAJudgeReward(judge)
         print_memory_snapshot("after_judge_init")
@@ -638,7 +791,8 @@ def train_mm(args: argparse.Namespace) -> Path:
     rank0_print(f"PHASE 1: Memory Manager GRPO Training (reward={args.reward_mode})")
     rank0_print("=" * 60)
 
-    output_dir = OUTPUT_DIR / "memory-r1-rl" / f"memory_manager_rl_{args.reward_mode}"
+    tag_suffix = f"_{args.run_tag}" if args.run_tag else ""
+    output_dir = OUTPUT_DIR / "memory-r1-rl" / f"memory_manager_rl_{args.reward_mode}{tag_suffix}"
     if is_rank0():
         output_dir.mkdir(parents=True, exist_ok=True)
     _barrier()  # ensure output_dir exists before SFT/GRPO writes on any rank
@@ -675,28 +829,30 @@ def train_mm(args: argparse.Namespace) -> Path:
         frozen_aa_model = None
 
     # LLM judge shares the frozen AA engine (same frozen base model).
-    # Needed by both the graded "llm" reward and the "mm_delta" reward.
+    # Needed by the graded "llm" reward, the "mm_delta" reward, and the
+    # "mm_smooth" reward (which forces the continuous 2-decimal judge).
     judge = None
-    if args.reward_mode in ("llm", "mm_delta"):
+    if args.reward_mode in ("llm", "mm_delta", "mm_smooth"):
         if frozen_aa_llm is None:
             raise ValueError(f"--reward-mode {args.reward_mode} requires vLLM (drop --no-vllm)")
         judge = LLMJudge(
             llm=frozen_aa_llm, tokenizer=aa_tokenizer,
             max_tokens=args.judge_max_tokens,
             manage_sleep=False,  # MMRewardComputer owns wake/sleep around all calls
+            continuous=args.judge_continuous or args.reward_mode == "mm_smooth",
         )
 
     print_memory_snapshot("after_frozen_aa_init")
 
     # Load data
     train_path = DATA_DIR / "memory_manager_train.jsonl"
-    train_dataset = load_rl_dataset_mm(train_path, policy_tokenizer, MAX_SEQ_LENGTH)
+    train_dataset = load_rl_dataset_mm(train_path, policy_tokenizer, MAX_SEQ_LENGTH, mm_gen_mode=args.mm_gen_mode)
     rank0_print(f"  Training examples: {len(train_dataset)}")
 
     val_data = None
     val_path = DATA_DIR / "memory_manager_val.jsonl"
     if val_path.exists():
-        val_data = list(load_rl_dataset_mm(val_path, policy_tokenizer, MAX_SEQ_LENGTH))
+        val_data = list(load_rl_dataset_mm(val_path, policy_tokenizer, MAX_SEQ_LENGTH, mm_gen_mode=args.mm_gen_mode))
         rank0_print(f"  Validation examples: {len(val_data)}")
 
     grpo_config = build_grpo_config(args, output_dir, MAX_COMPLETION_TOKENS_MM)
@@ -709,11 +865,13 @@ def train_mm(args: argparse.Namespace) -> Path:
         device=device,
         manage_sleep=not aux_dedicated,
         judge=judge,
-        use_delta=args.reward_mode == "mm_delta",
+        use_delta=args.reward_mode in ("mm_delta", "mm_smooth"),
         w_after=args.mm_w_after,
         w_delta=args.mm_w_delta,
         correct_threshold=args.mm_correct_threshold,
         delta_keep_correct=args.mm_delta_keep,
+        use_tanh_delta=args.reward_mode == "mm_smooth",
+        tanh_tau=args.mm_tanh_tau,
     )
 
     eval_fn = None
@@ -727,6 +885,7 @@ def train_mm(args: argparse.Namespace) -> Path:
             "val_dataset": val_data,
             "device": device,
             "max_new_tokens_aa": args.frozen_aa_max_tokens,
+            "mm_gen_mode": args.mm_gen_mode,
         }
 
     metrics_callback = MemoryR1MetricsCallback(
@@ -740,13 +899,17 @@ def train_mm(args: argparse.Namespace) -> Path:
         reward_computer=mm_reward,
     )
 
-    trainer = GRPOTrainer(
+    trainer = TypedTwoLevelGRPOTrainer(
         model=model,
         args=grpo_config,
         train_dataset=train_dataset,
         reward_funcs=[mm_reward],
         processing_class=policy_tokenizer,
         callbacks=[metrics_callback],
+        mm_gen_mode=args.mm_gen_mode,
+        advantage_mode=args.advantage_mode,
+        adv_global_weight=args.adv_global_weight,
+        adv_local_weight=args.adv_local_weight,
     )
 
     print_memory_snapshot("after_trainer_init")
@@ -805,12 +968,15 @@ def parse_args() -> argparse.Namespace:
         help="Learning rate for the MM SFT cold-start (default: 1e-5)",
     )
     parser.add_argument(
-        "--reward-mode", choices=["em", "llm", "mm_delta"], default="em",
+        "--reward-mode", choices=["em", "llm", "mm_delta", "mm_smooth"], default="em",
         help="Reward scoring: em = binary exact match (paper Eq. 4, default); "
-        "llm = 3-level graded score {0.0,0.5,1.0} from a frozen LLM judge; "
+        "llm = 3-level graded score {0.0,0.5,1.0} from a frozen LLM judge "
+        "(add --judge-continuous for the 2-decimal continuous variant); "
         "mm_delta = w_after*R_after + w_delta*R_delta (MM only), R_after is the "
-        "3-level judge score on the post-op bank, R_delta maps the before/after "
-        "correctness transition (baseline = pre-op bank)",
+        "judge score on the post-op bank, R_delta maps the before/after "
+        "correctness transition (baseline = pre-op bank); "
+        "mm_smooth = w_after*s_after + w_delta*tanh((s_after-s_before)/tau) "
+        "(MM only) on continuous judge scores, no hard threshold",
     )
     parser.add_argument(
         "--mm-w-after", type=float, default=0.7,
@@ -829,6 +995,22 @@ def parse_args() -> argparse.Namespace:
         "--mm-delta-keep", type=float, default=0.3,
         help="mm_delta: reward for right->right (keep correct) transition "
         "(default: 0.3; wrong->right=+1, right->wrong=-1, wrong->wrong=0)",
+    )
+    parser.add_argument(
+        "--mm-tanh-tau", type=float, default=0.25,
+        help="mm_smooth: smoothing temperature of tanh((s_after-s_before)/tau) "
+        "(default: 0.25; one judge level of improvement ~ tanh(0.8) = 0.66)",
+    )
+    parser.add_argument(
+        "--judge-continuous", action="store_true",
+        help="Switch the LLM judge to 5-band rubric + 2-decimal continuous "
+        "score in [0,1] (default off = legacy 3-level judge). Auto-enabled "
+        "by --reward-mode mm_smooth",
+    )
+    parser.add_argument(
+        "--run-tag", default="",
+        help="Optional experiment tag appended to the output dir name, e.g. "
+        "--run-tag smooth -> answer_agent_rl_llm_smooth/ (default: empty)",
     )
     parser.add_argument(
         "--aux-gpu", type=int, default=None,
@@ -879,6 +1061,22 @@ def parse_args() -> argparse.Namespace:
         "--grad-accum", type=int, default=GRADIENT_ACCUMULATION,
         help=f"Gradient accumulation steps (default: {GRADIENT_ACCUMULATION})",
     )
+    parser.add_argument(
+        "--mm-gen-mode", choices=["standard", "typed"], default="standard",
+        help="standard=现状整库输出同prompt采8; typed=原子操作+4类型提示词x2（默认 standard）",
+    )
+    parser.add_argument(
+        "--advantage-mode", choices=["group", "twolayer"], default="group",
+        help="group=现状单层; twolayer=0.5全局+0.5局部（默认 group；twolayer 要求 typed）",
+    )
+    parser.add_argument(
+        "--adv-global-weight", type=float, default=0.5,
+        help="twolayer: 全局 advantage 权重（默认 0.5）",
+    )
+    parser.add_argument(
+        "--adv-local-weight", type=float, default=0.5,
+        help="twolayer: 局部 advantage 权重（默认 0.5）",
+    )
     return parser.parse_args()
 
 
@@ -893,6 +1091,7 @@ def main():
     rank0_print(f"  Checkpoint every: {args.checkpoint_every} steps")
     rank0_print(f"  Output: {OUTPUT_DIR}")
     rank0_print(f"  Reward mode: {args.reward_mode}")
+    rank0_print(f"  MM gen mode: {args.mm_gen_mode}  Advantage mode: {args.advantage_mode}")
     rank0_print(
         "  Aux engine: "
         + (f"dedicated GPU {args.aux_gpu} (always awake)" if args.aux_gpu is not None

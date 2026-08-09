@@ -13,3 +13,10 @@ data/r1_training/embeddings_cache.json
 logs/
 jobs/
 eval/
+
+# plan / notes markdown files
+PLAN_H200_4GPU_VLLM_GRPO.md
+MM_typed_two_level_advantage_plan.md
+MM_RL_training_walkthrough.md
+MM_reward_improvement_plan.md
+experiments_summary.md

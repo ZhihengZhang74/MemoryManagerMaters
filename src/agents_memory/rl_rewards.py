@@ -11,6 +11,7 @@ Two reward modes:
 from __future__ import annotations
 
 import json
+import math
 import re
 import string
 import unicodedata
@@ -218,6 +219,56 @@ def parse_mm_output(completion: str) -> list[dict]:
     return []
 
 
+def parse_mm_atomic(completion: str) -> dict | None:
+    """Parse a single atomic operation JSON from a typed MM completion.
+
+    Expected formats (one per completion):
+        {"op": "ADD", "text": "..."}
+        {"op": "UPDATE", "id": "3", "text": "..."}
+        {"op": "DELETE", "id": "3"}
+        {"op": "NONE"}
+
+    Returns the parsed dict (with "event" key normalised from "op") or None
+    on parse failure. Reuses the same fence-stripping / regex-fallback logic
+    as ``parse_mm_output``.
+    """
+    text = completion.strip()
+    if text.startswith("```"):
+        lines = text.splitlines()
+        lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        text = "\n".join(lines).strip()
+
+    def _normalise(parsed: dict) -> dict | None:
+        if not isinstance(parsed, dict):
+            return None
+        op = str(parsed.get("op", "")).upper()
+        if op not in ("ADD", "UPDATE", "DELETE", "NONE"):
+            return None
+        result: dict[str, Any] = {"event": op}
+        if "text" in parsed:
+            result["text"] = parsed["text"]
+        if "id" in parsed:
+            result["id"] = str(parsed["id"])
+        return result
+
+    try:
+        parsed = json.loads(text)
+        return _normalise(parsed)
+    except json.JSONDecodeError:
+        pass
+
+    match = re.search(r'\{.*\}', text, re.DOTALL)
+    if match:
+        try:
+            parsed = json.loads(match.group())
+            return _normalise(parsed)
+        except json.JSONDecodeError:
+            pass
+    return None
+
+
 def apply_memory_operations(memory_bank: list[dict], operations: list[dict]) -> list[dict]:
     """Apply parsed MM operations to a memory bank state."""
     bank = [m.copy() for m in memory_bank]
@@ -293,11 +344,15 @@ class MMRewardComputer:
         w_delta: float = 0.3,
         correct_threshold: float = 0.5,
         delta_keep_correct: float = 0.3,
+        use_tanh_delta: bool = False,
+        tanh_tau: float = 0.25,
     ):
         if frozen_aa_llm is None and frozen_aa_model is None:
             raise ValueError("Provide either frozen_aa_llm (vLLM) or frozen_aa_model (HF)")
         if use_delta and judge is None:
             raise ValueError("use_delta requires a judge (graded scoring for before/after)")
+        if use_tanh_delta and not use_delta:
+            raise ValueError("use_tanh_delta requires use_delta (needs before/after scores)")
         self.frozen_aa_llm = frozen_aa_llm
         self.frozen_aa = frozen_aa_model
         self.tokenizer = tokenizer
@@ -312,6 +367,10 @@ class MMRewardComputer:
         self.w_delta = w_delta
         self.correct_threshold = correct_threshold
         self.delta_keep_correct = delta_keep_correct
+        # Smooth delta (--reward-mode mm_smooth): R_delta = tanh((s_after -
+        # s_before) / tau) on the CONTINUOUS judge scores, no hard threshold.
+        self.use_tanh_delta = use_tanh_delta
+        self.tanh_tau = tanh_tau
         if self.frozen_aa is not None:
             self.frozen_aa.eval()
         self.__name__ = "mm_reward"
@@ -361,20 +420,38 @@ class MMRewardComputer:
             completions: Plain string completions from GRPOTrainer.
             memory_bank_state: JSON-serialized memory banks (one per prompt).
             qa_pairs: JSON-serialized QA pair lists (one per prompt).
+            op_type: (typed mode only) list of requested operation types, one
+                per completion. When present, completions are parsed with
+                ``parse_mm_atomic`` and a type-match rate is tracked.
         """
+        op_types = kwargs.get("op_type")
+        typed_mode = op_types is not None
+
         # ---- Stage 1: flatten (completion, qa) pairs into prompt lists ----
         after_prompts: list[str] = []
         before_prompts: list[str] = []
         flat_meta: list[tuple[int, str, str]] = []  # (completion_idx, question, gold)
         parse_failures = 0
         op_counts: Counter = Counter()
+        type_matches = 0
 
         for idx, (completion, bank_json, qa_json) in enumerate(
             zip(completions, memory_bank_state, qa_pairs)
         ):
-            operations = parse_mm_output(completion)
-            if not operations:
-                parse_failures += 1
+            if typed_mode:
+                atomic = parse_mm_atomic(completion)
+                operations = [atomic] if atomic else []
+                if not operations:
+                    parse_failures += 1
+                if atomic and op_types[idx] is not None:
+                    actual = atomic.get("event", "")
+                    if actual == op_types[idx]:
+                        type_matches += 1
+            else:
+                operations = parse_mm_output(completion)
+                if not operations:
+                    parse_failures += 1
+
             for op in operations:
                 if isinstance(op, dict):
                     op_counts[str(op.get("event", "NONE")).upper()] += 1
@@ -434,11 +511,19 @@ class MMRewardComputer:
                 before_texts = _gen(before_prompts)
                 before_preds = [extract_answer_from_completion(t) for t in before_texts]
                 before_scores, _ = _score(flat_meta, before_preds)
-                thr = self.correct_threshold
-                delta_values = [
-                    self._delta_value(b >= thr, a >= thr)
-                    for b, a in zip(before_scores, after_scores)
-                ]
+                if self.use_tanh_delta:
+                    # Smooth bounded trend signal on continuous scores: no
+                    # threshold, small noise is damped, large moves saturate.
+                    delta_values = [
+                        math.tanh((a - b) / self.tanh_tau)
+                        for b, a in zip(before_scores, after_scores)
+                    ]
+                else:
+                    thr = self.correct_threshold
+                    delta_values = [
+                        self._delta_value(b >= thr, a >= thr)
+                        for b, a in zip(before_scores, after_scores)
+                    ]
         finally:
             if own_sleep:
                 self.frozen_aa_llm.sleep(level=1)
@@ -471,6 +556,9 @@ class MMRewardComputer:
             # EM is always tracked as an un-gameable monitor, even in llm mode
             "mm_em_reward_mean": sum(em_rewards) / n if n else 0.0,
         }
+        if typed_mode:
+            self.last_stats["mm_type_match_rate"] = type_matches / n if n else 0.0
+            self.last_stats["mm_adv_mode"] = "typed"
         if self.use_delta:
             trans = Counter()
             for b, a in zip(before_scores, after_scores):
@@ -484,6 +572,8 @@ class MMRewardComputer:
                     sum(delta_values) / len(delta_values) if delta_values else 0.0),
                 **{f"mm_trans_{k}": v for k, v in sorted(trans.items())},
             })
+            if self.use_tanh_delta:
+                self.last_stats["mm_tanh_tau"] = self.tanh_tau
         if self.judge is not None:
             self.last_stats.update(self.judge.last_stats)
 
